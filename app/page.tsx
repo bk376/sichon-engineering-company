@@ -22,8 +22,10 @@ import {
   UsersRound,
   Zap
 } from "lucide-react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
-import { useRef } from "react";
+import { useMemo, useRef, useState } from "react";
+import * as THREE from "three";
 
 const focusAreas = [
   {
@@ -61,13 +63,6 @@ const heroStats = [
   { value: "01", label: "mission standard" }
 ];
 
-const signalPoints = [
-  { label: "Road access", x: "18%", y: "44%" },
-  { label: "Drainage", x: "56%", y: "24%" },
-  { label: "Solar", x: "78%", y: "58%" },
-  { label: "Public space", x: "34%", y: "70%" }
-];
-
 const projects = [
   { icon: Fence, label: "Perimeter and retaining walls" },
   { icon: Play, label: "Football fields and playgrounds" },
@@ -76,6 +71,13 @@ const projects = [
   { icon: Map, label: "Roads and access networks" },
   { icon: Leaf, label: "Native tree programs" }
 ];
+
+const sceneNodes = [
+  { label: "Road access", position: [-2.8, -0.4, 0.6], color: "#55d6c2" },
+  { label: "Drainage", position: [-0.35, 0.15, -0.55], color: "#7aa7d9" },
+  { label: "Solar", position: [2.65, 0.55, 0.25], color: "#e9c46a" },
+  { label: "Public space", position: [1.15, -0.82, 0.8], color: "#c6e56b" }
+] as const;
 
 const values = [
   {
@@ -128,6 +130,186 @@ function FadeSection({
   );
 }
 
+function RouteLine({
+  points,
+  color,
+  delay = 0
+}: {
+  points: THREE.Vector3[];
+  color: string;
+  delay?: number;
+}) {
+  const lineRef = useRef<THREE.Line>(null);
+  const line = useMemo(() => {
+    const curve = new THREE.CatmullRomCurve3(points);
+    const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(96));
+    const material = new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0.72
+    });
+    return new THREE.Line(geometry, material);
+  }, [points]);
+
+  useFrame(({ clock }) => {
+    const line = lineRef.current;
+    if (!line) return;
+
+    const material = line.material as THREE.LineBasicMaterial;
+    const pulse = Math.sin(clock.elapsedTime * 1.4 + delay) * 0.18 + 0.62;
+    material.opacity = pulse;
+  });
+
+  return <primitive ref={lineRef} object={line} />;
+}
+
+function InfrastructureNode({
+  label,
+  position,
+  color
+}: {
+  label: string;
+  position: readonly [number, number, number];
+  color: string;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const nodeRef = useRef<THREE.Mesh>(null);
+
+  useFrame(({ clock }) => {
+    const node = nodeRef.current;
+    if (!node) return;
+    node.position.y = position[1] + Math.sin(clock.elapsedTime * 1.6 + position[0]) * 0.045;
+    node.scale.setScalar(hovered ? 1.22 : 1);
+  });
+
+  return (
+    <group position={[position[0], position[1], position[2]]}>
+      <mesh
+        ref={nodeRef}
+        onPointerOver={() => setHovered(true)}
+        onPointerOut={() => setHovered(false)}
+      >
+        <sphereGeometry args={[0.13, 32, 32]} />
+        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={1.5} />
+      </mesh>
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.24, 0.26, 48]} />
+        <meshBasicMaterial color={color} transparent opacity={hovered ? 0.78 : 0.38} />
+      </mesh>
+      <mesh position={[0, -0.1, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.08, 32]} />
+        <meshBasicMaterial color={color} transparent opacity={0.22} />
+      </mesh>
+    </group>
+  );
+}
+
+function IntelligentInfrastructureScene() {
+  const rigRef = useRef<THREE.Group>(null);
+  const particleGeometry = useMemo(() => {
+    const positions = new Float32Array(360 * 3);
+    for (let i = 0; i < 360; i += 1) {
+      positions[i * 3] = (Math.random() - 0.5) * 7.4;
+      positions[i * 3 + 1] = Math.random() * 2.8 - 0.9;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 4.6;
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    return geometry;
+  }, []);
+
+  useFrame(({ clock, pointer }) => {
+    const rig = rigRef.current;
+    if (!rig) return;
+    rig.rotation.y = pointer.x * 0.16 + Math.sin(clock.elapsedTime * 0.15) * 0.04;
+    rig.rotation.x = -0.22 + pointer.y * 0.08;
+  });
+
+  return (
+    <>
+      <fog attach="fog" args={["#071012", 4.5, 9.2]} />
+      <ambientLight intensity={0.56} />
+      <directionalLight position={[3, 4, 3]} intensity={1.35} color="#effbf6" />
+      <pointLight position={[-3, 2, 2]} intensity={2.2} color="#55d6c2" />
+      <pointLight position={[3, 1.2, -1.8]} intensity={1.4} color="#e9c46a" />
+
+      <group ref={rigRef} position={[0, -0.25, 0]}>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.08, 0]}>
+          <planeGeometry args={[7.8, 5.2, 36, 24]} />
+          <meshStandardMaterial
+            color="#11211d"
+            emissive="#14362f"
+            emissiveIntensity={0.28}
+            roughness={0.72}
+            metalness={0.22}
+            wireframe
+          />
+        </mesh>
+
+        <RouteLine
+          color="#55d6c2"
+          points={[
+            new THREE.Vector3(-3.2, -0.76, 0.62),
+            new THREE.Vector3(-1.8, -0.5, 0.18),
+            new THREE.Vector3(-0.36, 0.1, -0.55),
+            new THREE.Vector3(1.35, -0.42, 0.28),
+            new THREE.Vector3(2.8, 0.48, 0.24)
+          ]}
+        />
+        <RouteLine
+          color="#e9c46a"
+          delay={0.8}
+          points={[
+            new THREE.Vector3(-2.7, 0.36, -1.1),
+            new THREE.Vector3(-1.18, 0.08, -0.18),
+            new THREE.Vector3(0.72, 0.64, -0.88),
+            new THREE.Vector3(2.72, -0.28, 0.42)
+          ]}
+        />
+        <RouteLine
+          color="#7aa7d9"
+          delay={1.35}
+          points={[
+            new THREE.Vector3(-3.25, -0.86, -0.55),
+            new THREE.Vector3(-1.55, -0.94, -0.16),
+            new THREE.Vector3(0.45, -0.52, 0.72),
+            new THREE.Vector3(2.35, -0.88, -0.4)
+          ]}
+        />
+
+        {sceneNodes.map((node) => (
+          <InfrastructureNode
+            key={node.label}
+            label={node.label}
+            position={node.position}
+            color={node.color}
+          />
+        ))}
+
+        <group position={[0, -0.28, 0]}>
+          {[-2.5, -1.3, -0.2, 1, 2.1].map((x, index) => (
+            <mesh key={x} position={[x, -0.48 + index * 0.06, -1.25 + (index % 2) * 0.62]}>
+              <boxGeometry args={[0.34, 0.55 + index * 0.16, 0.34]} />
+              <meshStandardMaterial
+                color={index % 2 ? "#1e4138" : "#26372d"}
+                emissive={index % 2 ? "#55d6c2" : "#e9c46a"}
+                emissiveIntensity={0.16}
+                roughness={0.52}
+                metalness={0.38}
+              />
+            </mesh>
+          ))}
+        </group>
+
+        <points geometry={particleGeometry}>
+          <pointsMaterial color="#effbf6" size={0.014} transparent opacity={0.42} />
+        </points>
+      </group>
+    </>
+  );
+}
+
 export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
@@ -146,7 +328,7 @@ export default function Home() {
           <a href="#mission">Mission</a>
           <a href="#platform">Delivery</a>
           <a href="#works">Works</a>
-          <a href="#invest">Invest</a>
+          <a href="#values">Values</a>
         </div>
       </nav>
 
@@ -155,17 +337,17 @@ export default function Home() {
         <div className="hero-copy">
           <p className="eyebrow">
             <Sparkles size={16} aria-hidden="true" />
-            Investor presentation · May 24, 2026
+            Intelligent engineering · Kenya
           </p>
-          <h1>Engineering practical works for Kenya&apos;s next infrastructure leap.</h1>
+          <h1>Engineering Kenya&apos;s intelligent infrastructure.</h1>
           <p className="hero-lede">
             Sichon Engineering Company identifies real infrastructure gaps,
             designs viable solutions, executes responsibly, and builds trust
             through disciplined performance.
           </p>
           <div className="hero-actions">
-            <a className="primary-action" href="#invest">
-              Investor thesis <ArrowRight size={18} aria-hidden="true" />
+            <a className="primary-action" href="#works">
+              Explore works <ArrowRight size={18} aria-hidden="true" />
             </a>
             <a className="secondary-action" href="#platform">
               View delivery model
@@ -181,40 +363,32 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-visual" aria-label="Infrastructure delivery system visualization">
-          <div className="terrain-wash" />
-          <div className="signal-grid" />
-          <svg className="route-map" viewBox="0 0 640 560" role="img" aria-label="Animated infrastructure route network">
-            <path className="route route-base" d="M72 430 C150 340 205 380 276 284 S432 110 558 186" />
-            <path className="route route-alt" d="M96 142 C178 215 248 160 318 248 S416 406 552 344" />
-            <path className="route route-water" d="M120 484 C230 440 268 512 356 458 S478 398 594 464" />
-          </svg>
-          {signalPoints.map((point) => (
-            <div
-              className="field-signal"
-              key={point.label}
-              style={{ left: point.x, top: point.y }}
-            >
-              <i />
-              <span>{point.label}</span>
+          <Canvas
+            className="hero-canvas"
+            camera={{ position: [0, 1.7, 5.7], fov: 45 }}
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: "high-performance",
+              preserveDrawingBuffer: true
+            }}
+          >
+            <IntelligentInfrastructureScene />
+          </Canvas>
+          <div className="scene-overlay">
+            {sceneNodes.map((node) => (
+              <div className="scene-label" key={node.label}>
+                <i style={{ background: node.color }} />
+                <span>{node.label}</span>
+              </div>
+            ))}
+          </div>
+          <div className="scene-status">
+            <ClipboardCheck size={22} aria-hidden="true" />
+            <div>
+              <span>Delivery standard</span>
+              <strong>Survey · Design · Build · Maintain</strong>
             </div>
-          ))}
-          <div className="city-line">
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-          </div>
-          <div className="ai-core">
-            <ClipboardCheck size={42} aria-hidden="true" />
-            <span>Delivery Standard</span>
-          </div>
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
-          <div className="site-card">
-            <span>Active pipeline</span>
-            <strong>Built environment · Energy · Sustainability</strong>
           </div>
         </div>
       </header>
@@ -238,10 +412,10 @@ export default function Home() {
         <div className="centered">
           <h2>A practical operating model for work that must last.</h2>
           <p>
-            Digital tools, including AI-assisted analysis where appropriate,
-            support the mission by improving evidence capture, option review,
-            cost visibility, and documentation. The center remains responsible
-            engineering.
+            Digital tools and AI-assisted analysis support the mission by
+            improving evidence capture, option review, cost visibility, and
+            documentation. The center remains responsible engineering and
+            accountable construction.
           </p>
         </div>
         <div className="ai-loop">
@@ -297,7 +471,7 @@ export default function Home() {
         <div className="section-kicker">Why Now</div>
         <div className="evidence-grid">
           <div className="evidence-copy">
-            <h2>Visible gaps create investable demand for reliable local execution.</h2>
+            <h2>Visible gaps call for reliable local execution.</h2>
             <p>
               The opportunity is grounded in problems people can see: unsafe
               pedestrian paths, poor drainage, unreliable energy, underused
@@ -325,7 +499,7 @@ export default function Home() {
         </div>
       </FadeSection>
 
-      <FadeSection className="values-section">
+      <FadeSection className="values-section" id="values">
         <div className="section-kicker">Operating Values</div>
         <div className="values-grid">
           {values.map((value) => (
@@ -338,11 +512,11 @@ export default function Home() {
         </div>
       </FadeSection>
 
-      <FadeSection className="invest-section" id="invest">
+      <FadeSection className="invest-section">
         <div className="invest-panel">
           <div>
-            <div className="section-kicker">Investor Thesis</div>
-            <h2>Build the trusted engineering company for infrastructure markets that need execution, not slogans.</h2>
+            <div className="section-kicker">Build With Us</div>
+            <h2>Make infrastructure practical, safe, maintainable, and worthy of the communities it serves.</h2>
           </div>
           <div className="thesis-grid">
             <div>

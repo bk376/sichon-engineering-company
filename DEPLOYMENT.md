@@ -6,16 +6,16 @@ Production URL:
 https://krop-umber.vercel.app
 
 Deployment URL:
-https://krop-51i07akhr-benards-projects-233905f5.vercel.app
+https://krop-evzuxc1fo-benards-projects-233905f5.vercel.app
 
 Inspect URL:
-https://vercel.com/benards-projects-233905f5/krop/5fBqhfhzyaPYrFQ7caq2LzGGuRrm
+https://vercel.com/benards-projects-233905f5/krop/GtnjXduE3CNWyoN3hfCc6PS42Khw
 
 Project:
 benards-projects-233905f5/krop
 
 Deployment ID:
-dpl_5fBqhfhzyaPYrFQ7caq2LzGGuRrm
+dpl_GtnjXduE3CNWyoN3hfCc6PS42Khw
 
 Deployment status:
 READY

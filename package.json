@@ -10,11 +10,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@react-three/fiber": "^9.6.1",
     "lucide-react": "latest",
     "motion": "latest",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "three": "^0.184.0"
   },
   "overrides": {
     "postcss": "^8.5.10"
@@ -23,7 +25,9 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/three": "^0.184.1",
     "babel-plugin-react-compiler": "latest",
+    "playwright": "^1.60.0",
     "typescript": "latest"
   }
 }

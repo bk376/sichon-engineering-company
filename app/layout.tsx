@@ -15,13 +15,13 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Sichon Engineering Company | Mission-Led Infrastructure",
+  title: "Sichon Engineering Company | Intelligent Infrastructure Engineering",
   description:
-    "An investor-ready presentation for Sichon Engineering Company: mission-led engineering for safer infrastructure, clean energy, environmental resilience, and trusted delivery in Kenya.",
+    "Sichon Engineering Company builds practical, intelligent infrastructure for safer mobility, clean energy, environmental resilience, and trusted delivery in Kenya.",
   openGraph: {
     title: "Sichon Engineering Company",
     description:
-      "Mission-led engineering for practical infrastructure and sustainable development.",
+      "Practical engineering for intelligent infrastructure and sustainable development.",
     type: "website"
   }
 };
