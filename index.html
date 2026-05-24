@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sichon Engineering Company — Addressing Kenya's infrastructure gap through disciplined, responsible engineering." />
+  <title>Sichon Engineering Company</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <style>
+    /* ═══ TOKENS ═══════════════════════════════════════════ */
+    :root {
+      --void:   #040408;
+      --surface:#08081a;
+      --card:   rgba(255,255,255,0.028);
+      --card-h: rgba(255,255,255,0.052);
+
+      --accent:   #38BDF8;
+      --accent-2: #818CF8;
+
+      --t1: #E2E8FF;
+      --t2: rgba(226,232,255,0.58);
+      --t3: rgba(226,232,255,0.30);
+
+      --border:  rgba(255,255,255,0.055);
+      --border-a:rgba(56,189,248,0.18);
+
+      --fh: 'Space Grotesk', sans-serif;
+      --fb: 'Inter', sans-serif;
+
+      --r-sm: 10px;
+      --r-md: 16px;
+      --r-lg: 26px;
+      --blur: blur(28px) saturate(1.3);
+    }
+
+    /* ═══ RESET ══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background: var(--void);
+      color: var(--t1);
+      font-family: var(--fb);
+      font-size: 16px;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    ::-webkit-scrollbar { width: 2px; }
+    ::-webkit-scrollbar-track { background: var(--void); }
+    ::-webkit-scrollbar-thumb { background: var(--accent-2); border-radius: 99px; }
+
+    /* ═══ KEYFRAMES ══════════════════════════════════════════ */
+    @keyframes holo {
+      0%   { background-position: 0%   50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0%   50%; }
+    }
+
+    @keyframes float-a {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-18px); }
+    }
+    @keyframes float-b {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(12px); }
+    }
+
+    @keyframes scroll-drop {
+      0%    { opacity: 0; transform: scaleY(0); transform-origin: top; }
+      40%   { opacity: 1; transform: scaleY(1); transform-origin: top; }
+      60%   { opacity: 1; transform: scaleY(1); transform-origin: bottom; }
+      100%  { opacity: 0; transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    @keyframes grid-drift {
+      to { transform: translateY(72px); }
+    }
+
+    /* ═══ HOLOGRAPHIC TEXT ═══════════════════════════════════ */
+    .holo {
+      background: linear-gradient(
+        110deg,
+        var(--accent)  0%,
+        var(--accent-2) 35%,
+        #C084FC       60%,
+        var(--accent)  100%
+      );
+      background-size: 250% 250%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: holo 6s ease infinite;
+    }
+
+    /* ═══ PARTICLE CANVAS ════════════════════════════════════ */
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.38;
+    }
+
+    /* ═══ NAVIGATION ═════════════════════════════════════════ */
+    .nav {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 900;
+      height: 68px;
+      padding: 0 clamp(24px, 5vw, 80px);
+      display: flex;
+      align-items: center;
+      transition: background 0.45s, border-color 0.45s;
+    }
+
+    .nav.on {
+      background: rgba(4,4,8,0.78);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav__row {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav__brand {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .nav__name {
+      font-family: var(--fh);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--t1);
+    }
+
+    .nav__sub {
+      font-size: 9.5px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--t3);
+      font-weight: 400;
+    }
+
+    .nav__links {
+      display: flex;
+      gap: 38px;
+      align-items: center;
+    }
+
+    .nav__links a {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--t2);
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav__links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav__links a:hover { color: var(--t1); }
+    .nav__links a:hover::after { width: 100%; }
+
+    /* contact link — slightly muted, no button styling */
+    .nav__contact {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--t3);
+      transition: color 0.2s;
+      padding-left: 8px;
+      border-left: 1px solid var(--border);
+    }
+    .nav__contact:hover { color: var(--t1); }
+
+    /* ═══ HERO ════════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      padding: 100px clamp(24px, 5vw, 80px) 80px;
+      overflow: hidden;
+    }
+
+    /* faint moving grid */
+    .hero__grid {
+      position: absolute;
+      inset: -80px;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 88px 88px;
+      animation: grid-drift 12s linear infinite;
+      pointer-events: none;
+      mask-image: radial-gradient(ellipse 75% 65% at 50% 50%, black 20%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 50%, black 20%, transparent 80%);
+    }
+
+    .hero__orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+    }
+    .hero__orb--a {
+      width: 560px; height: 560px;
+      top: -15%; right: -8%;
+      background: radial-gradient(circle, rgba(129,140,248,0.12), transparent 68%);
+      animation: float-a 11s ease-in-out infinite;
+    }
+    .hero__orb--b {
+      width: 420px; height: 420px;
+      bottom: -5%; left: -6%;
+      background: radial-gradient(circle, rgba(56,189,248,0.1), transparent 68%);
+      animation: float-b 14s ease-in-out infinite;
+    }
+
+    .hero__body {
+      position: relative;
+      z-index: 2;
+      max-width: 860px;
+    }
+
+    .hero__eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--t3);
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .hero__eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px; height: 1px;
+      background: var(--accent);
+      opacity: 0.6;
+    }
+
+    .hero__hl {
+      font-family: var(--fh);
+      font-size: clamp(44px, 7.8vw, 96px);
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.025em;
+    }
+
+    .hero__hl em {
+      font-style: normal;
+      display: block;
+    }
+
+    .hero__dash {
+      display: block;
+      width: 48px; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      margin: 36px 0;
+      opacity: 0.7;
+    }
+
+    .hero__desc {
+      font-size: clamp(15px, 1.8vw, 18px);
+      color: var(--t2);
+      max-width: 540px;
+      line-height: 1.8;
+    }
+
+    .hero__scroll {
+      position: absolute;
+      bottom: 36px; left: clamp(24px, 5vw, 80px);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 2;
+    }
+
+    .hero__scroll-label {
+      font-size: 9.5px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--t3);
+    }
+
+    .hero__scroll-track {
+      width: 1px; height: 52px;
+      background: var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero__scroll-track::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 50%;
+      background: var(--accent);
+      animation: scroll-drop 2.4s ease-in-out infinite;
+    }
+
+    /* ═══ SECTION BASE ════════════════════════════════════════ */
+    .s {
+      position: relative;
+      z-index: 1;
+      padding: clamp(80px, 10vw, 130px) clamp(24px, 5vw, 80px);
+    }
+
+    .s__in {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .s__label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .s__label::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--accent);
+    }
+
+    .s__h {
+      font-family: var(--fh);
+      font-size: clamp(32px, 4.8vw, 58px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .s__p {
+      font-size: 16px;
+      color: var(--t2);
+      max-width: 600px;
+      line-height: 1.8;
+      margin-top: 18px;
+    }
+
+    .glass-rule {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
+      margin: 0 clamp(24px, 5vw, 80px);
+    }
+
+    /* ═══ REVEAL SCROLL ANIMATION ═════════════════════════════
+       Elements fade in from blur as they enter the viewport.
+       JS uses IntersectionObserver + optional GSAP enhancement.
+    ══════════════════════════════════════════════════════════ */
+    .rv {
+      opacity: 0;
+      transform: translateY(36px);
+      filter: blur(14px);
+      will-change: opacity, transform, filter;
+    }
+
+    .rv.in {
+      animation: reveal-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes reveal-in {
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    .d1 { animation-delay: 0.08s; }
+    .d2 { animation-delay: 0.17s; }
+    .d3 { animation-delay: 0.26s; }
+    .d4 { animation-delay: 0.35s; }
+    .d5 { animation-delay: 0.44s; }
+
+    /* ═══ MISSION ════════════════════════════════════════════ */
+    .mission__grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 80px 100px;
+      align-items: start;
+      margin-top: 64px;
+    }
+
+    .mission__quote {
+      font-family: var(--fh);
+      font-size: clamp(20px, 2.8vw, 32px);
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+      padding-left: 28px;
+      border-left: 2px solid var(--accent);
+      color: var(--t1);
+    }
+
+    .mission__copy p {
+      font-size: 15.5px;
+      color: var(--t2);
+      line-height: 1.85;
+    }
+
+    .mission__copy p + p { margin-top: 18px; }
+
+    /* capability note — quiet, factual */
+    .mission__capability {
+      margin-top: 28px;
+      padding: 16px 20px;
+      border-left: 1px solid var(--border-a);
+      background: rgba(56,189,248,0.04);
+      border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    }
+
+    .mission__capability p {
+      font-size: 13px !important;
+      color: var(--t3) !important;
+      line-height: 1.65 !important;
+    }
+
+    .mission__stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      margin-top: 80px;
+    }
+
+    .stat {
+      padding: 32px 20px;
+      text-align: center;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .stat:last-child { border-right: none; }
+    .stat:hover { background: var(--card-h); }
+
+    .stat__n {
+      display: block;
+      font-family: var(--fh);
+      font-size: clamp(32px, 4.5vw, 52px);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat__l {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--t3);
+      font-weight: 500;
+    }
+
+    /* ═══ SERVICES ════════════════════════════════════════════ */
+    .services__grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 60px;
+    }
+
+    .svc {
+      padding: 36px 32px;
+      border-radius: var(--r-md);
+      background: var(--card);
+      border: 1px solid var(--border);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: border-color 0.35s, transform 0.35s, box-shadow 0.35s;
+      --mx: 50%; --my: 50%;
+    }
+
+    /* mouse-tracked shimmer — always present, visible on hover */
+    .svc::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        200px circle at var(--mx) var(--my),
+        var(--svc-glow, rgba(56,189,248,0.06)),
+        transparent 72%
+      );
+      opacity: 0;
+      transition: opacity 0.35s;
+      pointer-events: none;
+    }
+
+    .svc:hover {
+      border-color: rgba(255,255,255,0.10);
+      transform: translateY(-4px);
+      box-shadow: 0 28px 64px rgba(0,0,0,0.36);
+    }
+
+    .svc:hover::before { opacity: 1; }
+
+    .svc--a { --svc-glow: rgba(56,189,248,0.07); }
+    .svc--b { --svc-glow: rgba(245,158,11,0.07); }
+    .svc--c { --svc-glow: rgba(16,185,129,0.07); }
+    .svc--d { --svc-glow: rgba(129,140,248,0.07); }
+
+    .svc__num {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--svc-accent, var(--accent));
+      margin-bottom: 20px;
+      opacity: 0.65;
+    }
+
+    .svc--a { --svc-accent: #38BDF8; }
+    .svc--b { --svc-accent: #F59E0B; }
+    .svc--c { --svc-accent: #10B981; }
+    .svc--d { --svc-accent: #818CF8; }
+
+    .svc__icon {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 18px;
+      line-height: 1;
+    }
+
+    .svc__title {
+      font-family: var(--fh);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .svc__body {
+      font-size: 14px;
+      color: var(--t2);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    .svc__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .tag {
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.042);
+      border: 1px solid var(--border);
+      color: var(--t2);
+      transition: background 0.2s;
+    }
+
+    .svc:hover .tag { background: rgba(255,255,255,0.07); }
+
+    /* ═══ VALUES ══════════════════════════════════════════════ */
+    .values__grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-top: 60px;
+    }
+
+    .val {
+      padding: 30px 22px;
+      border-radius: var(--r-md);
+      background: var(--card);
+      border: 1px solid var(--border);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    /* bottom accent line per value */
+    .val::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 20%; right: 20%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--v-c), transparent);
+      opacity: 0;
+      transition: opacity 0.35s;
+    }
+
+    .val:hover { border-color: rgba(255,255,255,0.10); transform: translateY(-4px); }
+    .val:hover::after { opacity: 1; }
+
+    .val--1 { --v-c: #38BDF8; }
+    .val--2 { --v-c: #818CF8; }
+    .val--3 { --v-c: #F59E0B; }
+    .val--4 { --v-c: #10B981; }
+    .val--5 { --v-c: #F472B6; }
+
+    .val__n {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--v-c);
+      opacity: 0.65;
+      margin-bottom: 12px;
+    }
+
+    .val__icon { font-size: 26px; display: block; margin-bottom: 12px; }
+
+    .val__title {
+      font-family: var(--fh);
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .val__body {
+      font-size: 12.5px;
+      color: var(--t3);
+      line-height: 1.7;
+    }
+
+    /* ═══ APPROACH (subtle 3-column how-we-work) ════════════ */
+    .approach__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .appr {
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+    }
+
+    .appr__num {
+      font-family: var(--fh);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--t3);
+      margin-bottom: 16px;
+    }
+
+    .appr__title {
+      font-family: var(--fh);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .appr__body {
+      font-size: 14px;
+      color: var(--t2);
+      line-height: 1.8;
+    }
+
+    /* ═══ FOOTER / CONTACT ════════════════════════════════════
+       Contact is deliberately understated — no section heading,
+       no big CTA. Just the essentials.
+    ══════════════════════════════════════════════════════════ */
+    .footer {
+      position: relative;
+      z-index: 1;
+      padding: clamp(56px, 8vw, 96px) clamp(24px, 5vw, 80px) 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer__inner {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .footer__top {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: end;
+      gap: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .footer__brand {
+      font-family: var(--fh);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--t1);
+    }
+
+    .footer__brand span {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      color: var(--t3);
+      margin-top: 4px;
+    }
+
+    .footer__reach {
+      text-align: center;
+    }
+
+    .footer__reach-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--t3);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .footer__email {
+      font-family: var(--fh);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--t2);
+      border-bottom: 1px solid var(--border-a);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .footer__email:hover { color: var(--t1); border-color: var(--accent); }
+
+    .footer__links {
+      display: flex;
+      justify-content: flex-end;
+      gap: 28px;
+      align-items: flex-end;
+    }
+
+    .footer__links a {
+      font-size: 12.5px;
+      color: var(--t3);
+      transition: color 0.2s;
+    }
+
+    .footer__links a:hover { color: var(--t1); }
+
+    .footer__bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer__copy {
+      font-size: 12px;
+      color: var(--t3);
+      letter-spacing: 0.04em;
+    }
+
+    .footer__loc {
+      font-size: 12px;
+      color: var(--t3);
+    }
+
+    /* ═══ RESPONSIVE ══════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .mission__grid   { grid-template-columns: 1fr; gap: 48px; }
+      .values__grid    { grid-template-columns: repeat(3, 1fr); }
+      .approach__grid  { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav__links          { display: none; }
+      .nav__contact        { display: none; }
+      .services__grid      { grid-template-columns: 1fr; }
+      .mission__stats      { grid-template-columns: repeat(2, 1fr); }
+      .values__grid        { grid-template-columns: repeat(2, 1fr); }
+      .footer__top         { grid-template-columns: 1fr; text-align: center; gap: 28px; }
+      .footer__links       { justify-content: center; }
+    }
+
+    @media (max-width: 480px) {
+      .values__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- particles background -->
+<canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+<!-- ─────────── NAVIGATION ─────────── -->
+<nav class="nav" id="nav" aria-label="Main navigation">
+  <div class="nav__row">
+    <a href="#" class="nav__brand" aria-label="Sichon Engineering Company">
+      <span class="nav__name">Sichon</span>
+      <span class="nav__sub">Engineering Company</span>
+    </a>
+    <ul class="nav__links" role="list">
+      <li><a href="#mission">Mission</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#values">Values</a></li>
+      <li><a href="#approach">How We Work</a></li>
+    </ul>
+    <a href="#contact" class="nav__contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ─────────── HERO ─────────── -->
+<section class="hero" id="home" aria-label="Introduction">
+  <div class="hero__grid" aria-hidden="true"></div>
+  <div class="hero__orb hero__orb--a" aria-hidden="true"></div>
+  <div class="hero__orb hero__orb--b" aria-hidden="true"></div>
+
+  <div class="hero__body">
+
+    <div class="hero__eyebrow rv d1">Nairobi, Kenya &nbsp;·&nbsp; Est. 2026</div>
+
+    <h1 class="hero__hl rv d2">
+      Engineering is not<br>
+      merely a technical<br>
+      profession —
+      <em class="holo">it is a civic<br>responsibility.</em>
+    </h1>
+
+    <span class="hero__dash rv d3" aria-hidden="true"></span>
+
+    <p class="hero__desc rv d4">
+      Sichon Engineering Company was formed to address Kenya's measurable
+      infrastructure gap. We identify real gaps, design viable solutions,
+      execute responsibly, and build trust through performance.
+    </p>
+
+  </div>
+
+  <div class="hero__scroll" aria-hidden="true">
+    <span class="hero__scroll-label">Scroll</span>
+    <div class="hero__scroll-track"></div>
+  </div>
+</section>
+
+<div class="glass-rule"></div>
+
+<!-- ─────────── MISSION ─────────── -->
+<section class="s" id="mission" aria-label="Our Mission">
+  <div class="s__in">
+
+    <div class="rv">
+      <span class="s__label">Our Mission</span>
+      <h2 class="s__h">
+        Built for Kenya.<br>
+        <span class="holo">Held to global standards.</span>
+      </h2>
+    </div>
+
+    <div class="mission__grid">
+      <blockquote class="mission__quote rv d1">
+        "Identify real gaps,<br>
+        design viable solutions,<br>
+        execute responsibly,<br>
+        and build trust through<br>
+        performance."
+      </blockquote>
+
+      <div class="mission__copy rv d2">
+        <p>
+          Technology is a defining feature of the 21st Century. Nations that harness it
+          thrive; those that neglect it stagnate. Across Kenya, there remains a measurable
+          technological and infrastructure gap — visible in transportation inefficiencies,
+          unreliable energy systems, inadequate drainage, unsafe pedestrian infrastructure,
+          and poorly maintained public spaces.
+        </p>
+        <p>
+          Engineering is the discipline most directly responsible for confronting and
+          correcting these deficiencies. It is not merely a technical profession —
+          it is a civic responsibility.
+        </p>
+        <p>
+          Our team was formed to address practical infrastructure and technological
+          shortcomings through structured, disciplined work. We aim not only to offer
+          services, but to provide reliable solutions that improve safety, efficiency,
+          and sustainability.
+        </p>
+        <div class="mission__capability">
+          <p>
+            Our design and analysis process is supported by computational tools and
+            AI-assisted simulation — enabling greater precision, reduced material waste,
+            and faster project delivery.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mission__stats rv d2">
+      <div class="stat">
+        <span class="stat__n" data-target="4">0</span>
+        <span class="stat__l">Service Areas</span>
+      </div>
+      <div class="stat">
+        <span class="stat__n" data-target="5">0</span>
+        <span class="stat__l">Core Values</span>
+      </div>
+      <div class="stat">
+        <span class="stat__n" data-target="100">0</span>
+        <span class="stat__l">% Commitment</span>
+      </div>
+      <div class="stat">
+        <span class="stat__n" data-target="2026">0</span>
+        <span class="stat__l">Founded</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="glass-rule"></div>
+
+<!-- ─────────── SERVICES ─────────── -->
+<section class="s" id="services" aria-label="Our Services">
+  <div class="s__in">
+
+    <div class="rv">
+      <span class="s__label">What We Do</span>
+      <h2 class="s__h">
+        Four areas of practice.
+      </h2>
+      <p class="s__p">
+        From drawing boards to completed infrastructure — delivered with precision,
+        within budget, and built to last.
+      </p>
+    </div>
+
+    <div class="services__grid">
+
+      <div class="svc svc--a rv d1">
+        <div class="svc__num">01</div>
+        <span class="svc__icon" aria-hidden="true">🏗️</span>
+        <div class="svc__title">Built Environment</div>
+        <div class="svc__body">
+          The built environment should reflect a balance between functionality,
+          sustainability, and aesthetic value. We deliver practical, cost-effective,
+          and durable solutions tailored to local contexts and global standards.
+        </div>
+        <div class="svc__tags">
+          <span class="tag">Drawing &amp; Design</span>
+          <span class="tag">Fencing &amp; Retaining Walls</span>
+          <span class="tag">Recreational Spaces</span>
+          <span class="tag">Roads &amp; Walkways</span>
+          <span class="tag">Drainage Systems</span>
+        </div>
+      </div>
+
+      <div class="svc svc--b rv d2">
+        <div class="svc__num">02</div>
+        <span class="svc__icon" aria-hidden="true">☀️</span>
+        <div class="svc__title">Clean Energy</div>
+        <div class="svc__body">
+          We are committed to advancing clean energy solutions through the design
+          and implementation of solar systems tailored to residential, commercial,
+          and institutional needs. Our goal is reliable, affordable, and sustainable
+          energy access.
+        </div>
+        <div class="svc__tags">
+          <span class="tag">Solar Design</span>
+          <span class="tag">Residential Systems</span>
+          <span class="tag">Commercial &amp; Institutional</span>
+          <span class="tag">Low-carbon Development</span>
+        </div>
+      </div>
+
+      <div class="svc svc--c rv d3">
+        <div class="svc__num">03</div>
+        <span class="svc__icon" aria-hidden="true">🌳</span>
+        <div class="svc__title">Environmental Sustainability</div>
+        <div class="svc__body">
+          As we interact with and shape our environment, it is incumbent upon us
+          to ensure that our impact is positive and lasting. We enhance the natural
+          landscape so that future generations inherit a stronger foundation for
+          growth and development.
+        </div>
+        <div class="svc__tags">
+          <span class="tag">Tree Planting</span>
+          <span class="tag">Native Species Selection</span>
+          <span class="tag">Biodiversity &amp; Ecology</span>
+          <span class="tag">Long-term Sustainability</span>
+        </div>
+      </div>
+
+      <div class="svc svc--d rv d4">
+        <div class="svc__num">04</div>
+        <span class="svc__icon" aria-hidden="true">💡</span>
+        <div class="svc__title">Consulting</div>
+        <div class="svc__body">
+          Good advice saves time and money, and builds trust. We provide strategic
+          consulting across infrastructure planning, project management, regulatory
+          compliance, and technical feasibility — backed by genuine engineering
+          expertise in the field.
+        </div>
+        <div class="svc__tags">
+          <span class="tag">Project Feasibility</span>
+          <span class="tag">Regulatory Compliance</span>
+          <span class="tag">Strategic Planning</span>
+          <span class="tag">Technical Advisory</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="glass-rule"></div>
+
+<!-- ─────────── VALUES ─────────── -->
+<section class="s" id="values" aria-label="Our Values">
+  <div class="s__in">
+
+    <div class="rv" style="text-align:center; max-width:620px; margin:0 auto 60px;">
+      <span class="s__label" style="justify-content:center;">What We Stand For</span>
+      <h2 class="s__h" style="text-align:center;">
+        Five values.<br>
+        <span class="holo">No exceptions.</span>
+      </h2>
+    </div>
+
+    <div class="values__grid">
+
+      <div class="val val--1 rv d1">
+        <div class="val__n">01</div>
+        <span class="val__icon" aria-hidden="true">🛡️</span>
+        <div class="val__title">Safety</div>
+        <div class="val__body">
+          Safety is the first measure of engineering success. No compromise is
+          acceptable where human life is concerned.
+        </div>
+      </div>
+
+      <div class="val val--2 rv d2">
+        <div class="val__n">02</div>
+        <span class="val__icon" aria-hidden="true">⚙️</span>
+        <div class="val__title">Competence</div>
+        <div class="val__body">
+          Excellence requires technical skill, coordination, leadership, and
+          disciplined resource management.
+        </div>
+      </div>
+
+      <div class="val val--3 rv d3">
+        <div class="val__n">03</div>
+        <span class="val__icon" aria-hidden="true">🤝</span>
+        <div class="val__title">Integrity</div>
+        <div class="val__body">
+          Transparency in budgeting, documentation, and communication is
+          foundational. Integrity is embedded in our process.
+        </div>
+      </div>
+
+      <div class="val val--4 rv d4">
+        <div class="val__n">04</div>
+        <span class="val__icon" aria-hidden="true">🌍</span>
+        <div class="val__title">Respect</div>
+        <div class="val__body">
+          We design with community needs, environmental responsibility, and
+          professional fairness in mind at all times.
+        </div>
+      </div>
+
+      <div class="val val--5 rv d5">
+        <div class="val__n">05</div>
+        <span class="val__icon" aria-hidden="true">✦</span>
+        <div class="val__title">Aesthetics</div>
+        <div class="val__body">
+          Function and beauty can coexist. Good engineering enhances both
+          utility and visual harmony.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="glass-rule"></div>
+
+<!-- ─────────── HOW WE WORK ─────────── -->
+<section class="s" id="approach" aria-label="How We Work">
+  <div class="s__in">
+
+    <div class="rv">
+      <span class="s__label">How We Work</span>
+      <h2 class="s__h">
+        Structured. Disciplined.<br>
+        <span class="holo">Accountable.</span>
+      </h2>
+      <p class="s__p">
+        Our approach is grounded in rigorous process, honest communication,
+        and a commitment to delivering exactly what we promise.
+      </p>
+    </div>
+
+    <div class="approach__grid">
+
+      <div class="appr rv d1">
+        <div class="appr__num">Step 01</div>
+        <div class="appr__title">Identify the Gap</div>
+        <div class="appr__body">
+          We start by understanding the real problem — conducting thorough site
+          assessments, stakeholder consultation, and geospatial analysis to
+          define the scope accurately before a single line is drawn.
+        </div>
+      </div>
+
+      <div class="appr rv d2">
+        <div class="appr__num">Step 02</div>
+        <div class="appr__title">Design with Rigour</div>
+        <div class="appr__body">
+          High-quality drawings are the foundation of efficient and resilient
+          structures. We use industry-standard tools — including computational
+          design and simulation — to optimise cost, material use, and structural
+          performance before construction begins.
+        </div>
+      </div>
+
+      <div class="appr rv d3">
+        <div class="appr__num">Step 03</div>
+        <div class="appr__title">Execute Responsibly</div>
+        <div class="appr__body">
+          Every project is delivered with clear documentation, transparent
+          budgeting, and regular reporting. We do not cut corners. Safety,
+          regulatory compliance, and community respect are non-negotiable
+          at every stage.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="glass-rule"></div>
+
+<!-- ─────────── FOOTER / CONTACT ─────────── -->
+<footer class="footer" id="contact" aria-label="Footer and Contact">
+  <div class="footer__inner">
+
+    <div class="footer__top rv">
+      <div>
+        <div class="footer__brand">
+          Sichon
+          <span>Engineering Company</span>
+        </div>
+      </div>
+
+      <div class="footer__reach">
+        <p class="footer__reach-label">Get in touch</p>
+        <a href="mailto:info@sichonengineering.co.ke" class="footer__email">
+          info@sichonengineering.co.ke
+        </a>
+      </div>
+
+      <nav class="footer__links" aria-label="Footer navigation">
+        <a href="#mission">Mission</a>
+        <a href="#services">Services</a>
+        <a href="#values">Values</a>
+        <a href="#approach">How We Work</a>
+      </nav>
+    </div>
+
+    <div class="footer__bottom">
+      <span class="footer__copy">© 2026 Sichon Engineering Company. All rights reserved.</span>
+      <span class="footer__loc">Nairobi, Kenya</span>
+    </div>
+
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ────────────────────────────────────
+     PARTICLE CANVAS
+  ─────────────────────────────────────*/
+  const canvas = document.getElementById('particle-canvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, pts = [];
+
+  const N    = 72;
+  const DIST = 130;
+  const COLS = ['#38BDF8','#818CF8','#C084FC','#F472B6','#34D399'];
+
+  function resize () {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  class Pt {
+    constructor () { this.reset(); }
+    reset () {
+      this.x  = Math.random() * W;
+      this.y  = Math.random() * H;
+      this.vx = (Math.random() - 0.5) * 0.24;
+      this.vy = (Math.random() - 0.5) * 0.24;
+      this.r  = Math.random() * 1.5 + 0.4;
+      this.a  = Math.random() * 0.5 + 0.1;
+      this.c  = COLS[Math.floor(Math.random() * COLS.length)];
+    }
+    tick () {
+      this.x += this.vx; this.y += this.vy;
+      if (this.x < 0 || this.x > W) this.vx *= -1;
+      if (this.y < 0 || this.y > H) this.vy *= -1;
+    }
+    draw () {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = hex2rgba(this.c, this.a);
+      ctx.fill();
+    }
+  }
+
+  function hex2rgba (hex, a) {
+    const r = parseInt(hex.slice(1,3),16),
+          g = parseInt(hex.slice(3,5),16),
+          b = parseInt(hex.slice(5,7),16);
+    return `rgba(${r},${g},${b},${a})`;
+  }
+
+  function build () { pts = []; for (let i = 0; i < N; i++) pts.push(new Pt()); }
+
+  function frame () {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+        const d  = Math.hypot(dx, dy);
+        if (d < DIST) {
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(pts[j].x, pts[j].y);
+          ctx.strokeStyle = `rgba(129,140,248,${(1 - d/DIST) * 0.14})`;
+          ctx.lineWidth   = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+    pts.forEach(p => { p.tick(); p.draw(); });
+    requestAnimationFrame(frame);
+  }
+
+  resize(); build(); frame();
+  window.addEventListener('resize', () => { resize(); build(); });
+
+  /* ────────────────────────────────────
+     NAV SCROLL STATE
+  ─────────────────────────────────────*/
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('on', window.scrollY > 50);
+  }, { passive: true });
+
+  /* ────────────────────────────────────
+     HOLOGRAPHIC SCROLL REVEAL
+     IntersectionObserver triggers the
+     CSS animation on .rv elements.
+  ─────────────────────────────────────*/
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -44px 0px' });
+
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+  /* ────────────────────────────────────
+     GSAP ENHANCEMENT (optional layer)
+     Adds parallax + richer stagger on
+     top of the base CSS animation.
+  ─────────────────────────────────────*/
+  window.addEventListener('load', () => {
+    if (typeof gsap === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* hero line by line */
+    const heroLines = document.querySelectorAll('.hero__hl br');
+    // Parallax orbs
+    gsap.to('.hero__orb--a', {
+      yPercent: -22, ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.8 }
+    });
+    gsap.to('.hero__orb--b', {
+      yPercent: -14, ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 2.4 }
+    });
+
+    /* service cards stagger on enter */
+    gsap.utils.toArray('.svc').forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0, y: 55, filter: 'blur(16px)',
+        duration: 0.9, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+        delay: (i % 2) * 0.14
+      });
+    });
+
+    /* values stagger */
+    gsap.utils.toArray('.val').forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0, y: 38, filter: 'blur(12px)',
+        duration: 0.75, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 94%', once: true },
+        delay: i * 0.09
+      });
+    });
+
+    /* approach blocks */
+    gsap.utils.toArray('.appr').forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0, x: -24, filter: 'blur(10px)',
+        duration: 0.8, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+        delay: i * 0.12
+      });
+    });
+  });
+
+  /* ────────────────────────────────────
+     CARD MOUSE-TRACKED GLOW
+  ─────────────────────────────────────*/
+  document.querySelectorAll('.svc').forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      el.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100) + '%');
+    });
+  });
+
+  /* ────────────────────────────────────
+     STATS COUNTER
+  ─────────────────────────────────────*/
+  function countUp (el) {
+    const to = +el.dataset.target, dur = 1500, t0 = performance.now();
+    (function tick (now) {
+      const p = Math.min((now - t0) / dur, 1);
+      el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * to).toLocaleString();
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = to.toLocaleString();
+    })(t0);
+  }
+
+  const cio = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { countUp(e.target); cio.unobserve(e.target); } });
+  }, { threshold: 0.6 });
+
+  document.querySelectorAll('.stat__n[data-target]').forEach(el => cio.observe(el));
+
+  /* ────────────────────────────────────
+     SMOOTH ANCHOR SCROLL
+  ─────────────────────────────────────*/
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + scrollY - (nav?.offsetHeight ?? 68) - 16;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+}());
+</script>
+
+</body>
+</html>
