@@ -10,51 +10,47 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Three.js for the topographic wireframe hero background -->
+  <!-- Three.js — topographic wireframe hero -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <!-- GSAP + ScrollTrigger -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <!-- Lenis smooth scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
   <style>
-    /* ═══════════════════════════════════════════════════
-       DESIGN TOKENS
-    ═══════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════
+       TOKENS
+    ══════════════════════════════════════════════════ */
     :root {
       --void:    #040408;
       --surface: #07071a;
-      --card:    rgba(255,255,255,0.028);
-      --card-h:  rgba(255,255,255,0.052);
+      --card:    rgba(255,255,255,0.030);
+      --card-h:  rgba(255,255,255,0.056);
 
-      --accent:  #38BDF8;
-      --accent2: #818CF8;
+      --c1: #38BDF8;   /* cyan   */
+      --c2: #818CF8;   /* indigo */
+      --c3: #C084FC;   /* violet */
 
       --t1: #E2E8FF;
       --t2: rgba(226,232,255,0.58);
       --t3: rgba(226,232,255,0.28);
 
       --border:  rgba(255,255,255,0.055);
-      --border-a:rgba(56,189,248,0.18);
+      --borda:   rgba(56,189,248,0.18);
 
       --fh: 'Space Grotesk', sans-serif;
       --fb: 'Inter', sans-serif;
 
-      --r-sm: 10px;
-      --r-md: 16px;
-      --r-lg: 26px;
+      --r-sm: 10px; --r-md: 16px; --r-lg: 26px;
       --glass: blur(28px) saturate(1.3);
     }
 
-    /* ═══════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
        RESET
-    ═══════════════════════════════════════════════════ */
+    ══════════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html {
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-    }
-
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
     body {
       background: var(--void);
       color: var(--t1);
@@ -63,842 +59,474 @@
       line-height: 1.75;
       overflow-x: hidden;
     }
-
     a { color: inherit; text-decoration: none; }
     ul { list-style: none; }
-
     ::-webkit-scrollbar { width: 2px; }
     ::-webkit-scrollbar-track { background: var(--void); }
-    ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb { background: var(--c2); border-radius: 99px; }
 
-    /* ═══════════════════════════════════════════════════
-       KEYFRAMES
-    ═══════════════════════════════════════════════════ */
-    @keyframes holo {
-      0%   { background-position: 0%   50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0%   50%; }
+    /* ══════════════════════════════════════════════════
+       CINEMATIC INTRO OVERLAY
+    ══════════════════════════════════════════════════ */
+    #intro-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--void);
+      transform-origin: top center;
+      pointer-events: none;
     }
 
-    /* Ticker scroll — 50% because we duplicate content for seamless loop */
+    /* ══════════════════════════════════════════════════
+       KEYFRAMES
+    ══════════════════════════════════════════════════ */
+    @keyframes holo {
+      0%,100% { background-position: 0% 50%; }
+      50%      { background-position: 100% 50%; }
+    }
     @keyframes ticker-run {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
     }
-
-    @keyframes reveal-in {
-      to { opacity: 1; transform: translateY(0); filter: blur(0px); }
-    }
-
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
     @keyframes scroll-drop {
-      0%    { opacity: 0; transform: scaleY(0); transform-origin: top; }
-      40%   { opacity: 1; transform: scaleY(1); transform-origin: top; }
-      60%   { opacity: 1; transform: scaleY(1); transform-origin: bottom; }
-      100%  { opacity: 0; transform: scaleY(0); transform-origin: bottom; }
+      0%    { opacity:0; transform:scaleY(0); transform-origin:top; }
+      40%   { opacity:1; transform:scaleY(1); transform-origin:top; }
+      60%   { opacity:1; transform:scaleY(1); transform-origin:bottom; }
+      100%  { opacity:0; transform:scaleY(0); transform-origin:bottom; }
     }
-
     @keyframes dot-pulse {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50%       { opacity: 1;   transform: scale(1.5); }
+      0%,100% { opacity:.3; transform:scale(1); }
+      50%     { opacity:1;  transform:scale(1.6); }
+    }
+    @keyframes float-a { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
+    @keyframes float-b { 0%,100%{transform:translateY(0)} 50%{transform:translateY(12px)} }
+    @keyframes svg-draw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes fade-up {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
     }
 
-    @keyframes float-a {
-      0%,100% { transform: translateY(0); }
-      50%      { transform: translateY(-16px); }
-    }
-    @keyframes float-b {
-      0%,100% { transform: translateY(0); }
-      50%      { transform: translateY(10px); }
-    }
-
-    /* ═══════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
        HOLOGRAPHIC TEXT
-    ═══════════════════════════════════════════════════ */
+    ══════════════════════════════════════════════════ */
     .holo {
-      background: linear-gradient(
-        110deg,
-        var(--accent) 0%,
-        var(--accent2) 38%,
-        #C084FC 62%,
-        var(--accent) 100%
-      );
+      background: linear-gradient(110deg, var(--c1) 0%, var(--c2) 38%, var(--c3) 62%, var(--c1) 100%);
       background-size: 260% 260%;
-      -webkit-background-clip: text;
-      background-clip: text;
+      -webkit-background-clip: text; background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: holo 6s ease infinite;
     }
 
-    /* ═══════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
        NAVIGATION
-    ═══════════════════════════════════════════════════ */
+    ══════════════════════════════════════════════════ */
     .nav {
-      position: fixed;
-      inset: 0 0 auto;
-      z-index: 900;
-      height: 68px;
+      position: fixed; inset: 0 0 auto;
+      z-index: 900; height: 68px;
       padding: 0 clamp(24px, 5vw, 80px);
-      display: flex;
-      align-items: center;
-      transition: background 0.45s, border-color 0.45s;
+      display: flex; align-items: center;
+      transition: background .45s, border-color .45s;
     }
-
     .nav.on {
       background: rgba(4,4,8,0.82);
-      backdrop-filter: var(--glass);
-      -webkit-backdrop-filter: var(--glass);
+      backdrop-filter: var(--glass); -webkit-backdrop-filter: var(--glass);
       border-bottom: 1px solid var(--border);
     }
-
     .nav__row {
-      width: 100%;
-      max-width: 1240px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      width: 100%; max-width: 1240px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
     }
-
-    .nav__brand { display: flex; flex-direction: column; line-height: 1.15; }
-
+    .nav__brand { display:flex; flex-direction:column; line-height:1.15; }
     .nav__name {
-      font-family: var(--fh);
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--t1);
+      font-family: var(--fh); font-size:17px; font-weight:700;
+      letter-spacing:.16em; text-transform:uppercase; color:var(--t1);
     }
-
-    .nav__sub {
-      font-size: 9.5px;
-      letter-spacing: 0.26em;
-      text-transform: uppercase;
-      color: var(--t3);
-    }
-
-    .nav__links {
-      display: flex;
-      gap: 38px;
-      align-items: center;
-    }
-
+    .nav__sub { font-size:9.5px; letter-spacing:.26em; text-transform:uppercase; color:var(--t3); }
+    .nav__links { display:flex; gap:38px; align-items:center; }
     .nav__links a {
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      color: var(--t2);
-      transition: color 0.2s;
-      position: relative;
+      font-size:13px; font-weight:500; letter-spacing:.05em; color:var(--t2);
+      transition:color .2s; position:relative;
     }
-
     .nav__links a::after {
-      content: '';
-      position: absolute;
-      bottom: -3px; left: 0;
-      width: 0; height: 1px;
-      background: var(--accent);
-      transition: width 0.3s ease;
+      content:''; position:absolute; bottom:-3px; left:0;
+      width:0; height:1px; background:var(--c1); transition:width .3s ease;
     }
-
-    .nav__links a:hover { color: var(--t1); }
-    .nav__links a:hover::after { width: 100%; }
-
+    .nav__links a:hover { color:var(--t1); }
+    .nav__links a:hover::after { width:100%; }
     .nav__contact {
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      color: var(--t3);
-      transition: color 0.2s;
-      padding-left: 8px;
-      border-left: 1px solid var(--border);
+      font-size:13px; font-weight:500; letter-spacing:.05em; color:var(--t3);
+      transition:color .2s; padding-left:8px; border-left:1px solid var(--border);
     }
-    .nav__contact:hover { color: var(--t1); }
+    .nav__contact:hover { color:var(--t1); }
 
-    /* ═══════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
        HERO
-    ═══════════════════════════════════════════════════ */
+    ══════════════════════════════════════════════════ */
     .hero {
-      position: relative;
-      min-height: 100svh;
-      display: flex;
-      align-items: center;
-      padding: 100px clamp(24px, 5vw, 80px) 72px;
-      overflow: hidden;
+      position:relative; min-height:100svh;
+      display:flex; align-items:center;
+      padding:100px clamp(24px,5vw,80px) 72px;
+      overflow:hidden;
     }
-
-    /* Three.js canvas — fills hero only */
     #hero-3d {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      pointer-events:none; z-index:0;
     }
-
-    /* Atmospheric depth gradients */
-    .hero__atm {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
-
+    /* atmospheric orbs */
+    .hero__atm { position:absolute; inset:0; pointer-events:none; z-index:1; }
     .hero__atm::before {
-      content: '';
-      position: absolute;
-      top: -20%;
-      right: -10%;
-      width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(129,140,248,0.13) 0%, transparent 65%);
-      animation: float-a 12s ease-in-out infinite;
+      content:''; position:absolute;
+      top:10%; right:-5%;
+      width:680px; height:680px;
+      background:radial-gradient(circle, rgba(129,140,248,.14) 0%, transparent 65%);
+      animation:float-a 12s ease-in-out infinite;
     }
-
     .hero__atm::after {
-      content: '';
-      position: absolute;
-      bottom: 5%;
-      left: -8%;
-      width: 550px; height: 550px;
-      background: radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 65%);
-      animation: float-b 15s ease-in-out infinite;
+      content:''; position:absolute;
+      bottom:10%; left:-6%;
+      width:520px; height:520px;
+      background:radial-gradient(circle, rgba(56,189,248,.10) 0%, transparent 65%);
+      animation:float-b 15s ease-in-out infinite;
     }
-
-    /* Hero content */
-    .hero__body {
-      position: relative;
-      z-index: 3;
-      max-width: 860px;
-    }
-
-    /* Eyebrow */
+    .hero__body { position:relative; z-index:3; max-width:860px; }
     .hero__eyebrow {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--t3);
-      margin-bottom: 40px;
-      opacity: 0;
-      animation: fade-up 0.8s ease 0.2s forwards;
+      display:flex; align-items:center; gap:12px;
+      font-size:11px; font-weight:500; letter-spacing:.28em; text-transform:uppercase;
+      color:var(--t3); margin-bottom:40px;
+      opacity:0; animation:fade-up .8s ease .2s forwards;
     }
-
-    .hero__eyebrow-line {
-      width: 28px; height: 1px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-    }
-
-    .hero__eyebrow-dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--accent);
-      animation: dot-pulse 2s ease-in-out infinite;
-    }
-
-    /* Headline — each word is wrapped in .hw for kinetic reveal */
+    .hero__ey-line { width:28px; height:1px; background:linear-gradient(90deg,var(--c1),transparent); }
+    .hero__ey-dot  { width:5px; height:5px; border-radius:50%; background:var(--c1); animation:dot-pulse 2s ease-in-out infinite; }
     .hero__hl {
-      font-family: var(--fh);
-      font-size: clamp(42px, 7.5vw, 94px);
-      font-weight: 700;
-      line-height: 1.03;
-      letter-spacing: -0.025em;
+      font-family:var(--fh);
+      font-size:clamp(42px,7.5vw,94px);
+      font-weight:700; line-height:1.03; letter-spacing:-.025em;
     }
-
-    /* Each word — starts invisible, animated in by JS */
     .hero__hl .hw {
-      display: inline-block;
-      opacity: 0;
-      transform: translateY(38px);
-      filter: blur(14px);
-      /* transition applied by JS */
+      display:inline-block;
+      opacity:0; transform:translateY(38px); filter:blur(14px);
     }
-
-    /* Force "it is a civic / responsibility." onto their own lines */
-    .hero__hl .hw--block {
-      display: block;
+    .hero__hl .hw--block { display:block; }
+    .hero__dash {
+      display:block; width:44px; height:2px;
+      background:linear-gradient(90deg,var(--c1),var(--c2));
+      margin:38px 0;
+      opacity:0; animation:fade-up .6s ease 1.4s forwards;
     }
-
-    .hero__divider {
-      display: block;
-      width: 44px; height: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      margin: 38px 0;
-      opacity: 0;
-      animation: fade-up 0.6s ease 1.4s forwards;
-    }
-
     .hero__desc {
-      font-size: clamp(15px, 1.7vw, 18px);
-      color: var(--t2);
-      max-width: 520px;
-      line-height: 1.82;
-      opacity: 0;
-      animation: fade-up 0.8s ease 1.5s forwards;
+      font-size:clamp(15px,1.7vw,18px); color:var(--t2);
+      max-width:520px; line-height:1.82;
+      opacity:0; animation:fade-up .8s ease 1.5s forwards;
     }
-
-    /* ─── Ticker strip ─── */
+    /* ticker */
     .hero__ticker {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 42px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-      z-index: 4;
-      /* subtle background so it reads over the 3D scene */
-      background: linear-gradient(180deg, transparent, rgba(4,4,8,0.5));
+      position:absolute; bottom:0; left:0; right:0;
+      height:42px; border-top:1px solid var(--border);
+      display:flex; align-items:center; overflow:hidden; z-index:4;
+      background:linear-gradient(180deg,transparent,rgba(4,4,8,.55));
     }
-
     .hero__ticker-inner {
-      display: flex;
-      white-space: nowrap;
-      animation: ticker-run 42s linear infinite;
-      /* pause on hover */
+      display:flex; white-space:nowrap;
+      animation:ticker-run 46s linear infinite;
     }
-
-    .hero__ticker:hover .hero__ticker-inner {
-      animation-play-state: paused;
-    }
-
-    .hero__ticker-set {
-      display: flex;
-      gap: 0;
-      padding-right: 0;
-    }
-
+    .hero__ticker:hover .hero__ticker-inner { animation-play-state:paused; }
+    .hero__ticker-set { display:flex; }
     .hero__ticker-item {
-      font-size: 9.5px;
-      font-weight: 600;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--t3);
-      padding: 0 22px;
-      border-right: 1px solid var(--border);
+      font-size:9.5px; font-weight:600; letter-spacing:.28em; text-transform:uppercase;
+      color:var(--t3); padding:0 22px; border-right:1px solid var(--border);
     }
-
-    .hero__ticker-item--accent {
-      color: var(--accent);
-      opacity: 0.7;
-    }
-
-    /* Scroll indicator */
+    .hero__ticker-item--a { color:var(--c1); opacity:.7; }
+    /* scroll cue */
     .hero__scroll {
-      position: absolute;
-      bottom: 60px; right: clamp(24px, 5vw, 80px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      z-index: 4;
-      opacity: 0;
-      animation: fade-up 0.6s ease 2s forwards;
+      position:absolute; bottom:60px; right:clamp(24px,5vw,80px);
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+      z-index:4; opacity:0; animation:fade-up .6s ease 2s forwards;
     }
-
     .hero__scroll-label {
-      font-size: 9px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--t3);
-      writing-mode: vertical-lr;
+      font-size:9px; letter-spacing:.3em; text-transform:uppercase;
+      color:var(--t3); writing-mode:vertical-lr;
     }
-
     .hero__scroll-track {
-      width: 1px; height: 56px;
-      background: var(--border);
-      position: relative;
-      overflow: hidden;
+      width:1px; height:56px; background:var(--border);
+      position:relative; overflow:hidden;
     }
-
     .hero__scroll-track::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 50%;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-      animation: scroll-drop 2.6s ease-in-out infinite;
+      content:''; position:absolute; top:0; left:0;
+      width:100%; height:50%;
+      background:linear-gradient(to bottom,var(--c1),transparent);
+      animation:scroll-drop 2.6s ease-in-out infinite;
     }
 
-    /* ═══════════════════════════════════════════════════
-       SHARED SECTION STYLES
-    ═══════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════
+       SECTIONS
+    ══════════════════════════════════════════════════ */
     .s {
-      position: relative;
-      z-index: 1;
-      padding: clamp(80px, 10vw, 130px) clamp(24px, 5vw, 80px);
+      position:relative; z-index:1;
+      padding:clamp(80px,10vw,130px) clamp(24px,5vw,80px);
     }
-
-    .s__in {
-      max-width: 1240px;
-      margin: 0 auto;
-    }
-
+    .s__in { max-width:1240px; margin:0 auto; }
     .s__label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
+      font-size:10px; font-weight:600; letter-spacing:.28em;
+      text-transform:uppercase; color:var(--c1);
+      display:flex; align-items:center; gap:12px; margin-bottom:18px;
     }
-
-    .s__label::before {
-      content: '';
-      width: 24px; height: 1px;
-      background: var(--accent);
-    }
-
+    .s__label::before { content:''; width:24px; height:1px; background:var(--c1); }
     .s__h {
-      font-family: var(--fh);
-      font-size: clamp(32px, 4.8vw, 58px);
-      font-weight: 700;
-      line-height: 1.08;
-      letter-spacing: -0.02em;
+      font-family:var(--fh); font-size:clamp(32px,4.8vw,58px);
+      font-weight:700; line-height:1.08; letter-spacing:-.02em;
     }
-
-    .s__p {
-      font-size: 16px;
-      color: var(--t2);
-      max-width: 600px;
-      line-height: 1.8;
-      margin-top: 18px;
-    }
-
+    .s__p { font-size:16px; color:var(--t2); max-width:600px; line-height:1.8; margin-top:18px; }
     .glass-rule {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
-      margin: 0 clamp(24px, 5vw, 80px);
+      height:1px;
+      background:linear-gradient(90deg,transparent,var(--border) 30%,var(--border) 70%,transparent);
+      margin:0 clamp(24px,5vw,80px);
     }
 
-    /* ═══════════════════════════════════════════════════
-       SCROLL REVEAL
-    ═══════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════
+       SCROLL REVEAL (CSS-based, GSAP overrides)
+    ══════════════════════════════════════════════════ */
     .rv {
-      opacity: 0;
-      transform: translateY(36px);
-      filter: blur(14px);
-      will-change: opacity, transform, filter;
+      opacity:0;
+      transform:translateY(36px);
+      filter:blur(14px);
+      will-change:opacity,transform,filter;
     }
+    .rv.in { animation:reveal-in .9s cubic-bezier(.22,1,.36,1) forwards; }
+    @keyframes reveal-in { to { opacity:1; transform:translateY(0); filter:blur(0); } }
+    .d1{animation-delay:.08s} .d2{animation-delay:.17s} .d3{animation-delay:.26s}
+    .d4{animation-delay:.35s} .d5{animation-delay:.44s}
 
-    .rv.in {
-      animation: reveal-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-
-    @keyframes reveal-in {
-      to { opacity: 1; transform: translateY(0); filter: blur(0); }
-    }
-
-    .d1 { animation-delay: 0.08s; }
-    .d2 { animation-delay: 0.17s; }
-    .d3 { animation-delay: 0.26s; }
-    .d4 { animation-delay: 0.35s; }
-    .d5 { animation-delay: 0.44s; }
-
-    /* ═══════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
        MISSION
-    ═══════════════════════════════════════════════════ */
+    ══════════════════════════════════════════════════ */
     .mission__grid {
-      display: grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap: 80px 100px;
-      align-items: start;
-      margin-top: 64px;
+      display:grid; grid-template-columns:1fr 1.1fr;
+      gap:80px 100px; align-items:start; margin-top:64px;
     }
-
     .mission__quote {
-      font-family: var(--fh);
-      font-size: clamp(20px, 2.8vw, 32px);
-      font-weight: 600;
-      line-height: 1.42;
-      letter-spacing: -0.01em;
-      padding-left: 28px;
-      border-left: 2px solid var(--accent);
-      color: var(--t1);
+      font-family:var(--fh); font-size:clamp(20px,2.8vw,32px);
+      font-weight:600; line-height:1.42; letter-spacing:-.01em;
+      padding-left:28px; border-left:2px solid var(--c1); color:var(--t1);
     }
-
-    .mission__copy p {
-      font-size: 15.5px;
-      color: var(--t2);
-      line-height: 1.85;
-    }
-
-    .mission__copy p + p { margin-top: 18px; }
-
+    .mission__copy p { font-size:15.5px; color:var(--t2); line-height:1.85; }
+    .mission__copy p + p { margin-top:18px; }
     .mission__cap {
-      margin-top: 28px;
-      padding: 16px 20px;
-      border-left: 1px solid var(--border-a);
-      background: rgba(56,189,248,0.035);
-      border-radius: 0 var(--r-sm) var(--r-sm) 0;
+      margin-top:28px; padding:16px 20px;
+      border-left:1px solid var(--borda);
+      background:rgba(56,189,248,.035);
+      border-radius:0 var(--r-sm) var(--r-sm) 0;
     }
-
-    .mission__cap p {
-      font-size: 13px !important;
-      color: var(--t3) !important;
-      line-height: 1.65 !important;
-    }
-
+    .mission__cap p { font-size:13px !important; color:var(--t3) !important; line-height:1.65 !important; }
     .mission__stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border: 1px solid var(--border);
-      border-radius: var(--r-md);
-      overflow: hidden;
-      margin-top: 80px;
+      display:grid; grid-template-columns:repeat(4,1fr);
+      border:1px solid var(--border); border-radius:var(--r-md);
+      overflow:hidden; margin-top:80px;
     }
-
     .stat {
-      padding: 32px 20px;
-      text-align: center;
-      background: var(--card);
-      border-right: 1px solid var(--border);
-      transition: background 0.3s;
+      padding:32px 20px; text-align:center;
+      background:var(--card); border-right:1px solid var(--border);
+      transition:background .3s;
     }
-
-    .stat:last-child { border-right: none; }
-    .stat:hover { background: var(--card-h); }
-
+    .stat:last-child { border-right:none; }
+    .stat:hover { background:var(--card-h); }
     .stat__n {
-      display: block;
-      font-family: var(--fh);
-      font-size: clamp(32px, 4.5vw, 52px);
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+      display:block; font-family:var(--fh); font-size:clamp(32px,4.5vw,52px);
+      font-weight:700; line-height:1; margin-bottom:8px;
+      background:linear-gradient(135deg,var(--c1),var(--c2));
+      -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent;
     }
+    .stat__l { font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--t3); font-weight:500; }
 
-    .stat__l {
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--t3);
-      font-weight: 500;
-    }
-
-    /* ═══════════════════════════════════════════════════
-       SERVICES
-    ═══════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════
+       SERVICE CARDS — 3D TILT + SVG DIAGRAMS
+    ══════════════════════════════════════════════════ */
     .services__grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-      margin-top: 60px;
+      display:grid; grid-template-columns:repeat(2,1fr);
+      gap:18px; margin-top:60px;
     }
-
     .svc {
-      padding: 36px 32px;
-      border-radius: var(--r-md);
-      background: var(--card);
-      border: 1px solid var(--border);
-      backdrop-filter: var(--glass);
-      -webkit-backdrop-filter: var(--glass);
-      position: relative;
-      overflow: hidden;
-      cursor: default;
-      transition: border-color 0.35s, transform 0.35s, box-shadow 0.35s;
-      --mx: 50%; --my: 50%;
+      padding:36px 32px;
+      border-radius:var(--r-md);
+      background:var(--card); border:1px solid var(--border);
+      backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
+      position:relative; overflow:hidden; cursor:default;
+      /* 3D tilt base */
+      transform-style:preserve-3d;
+      transition:border-color .4s, box-shadow .4s, transform .7s cubic-bezier(.23,1,.32,1);
+      --mx:50%; --my:50%;
     }
-
+    /* mouse-tracked glow */
     .svc::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(
-        200px circle at var(--mx) var(--my),
-        var(--svc-glow, rgba(56,189,248,0.06)),
-        transparent 72%
-      );
-      opacity: 0;
-      transition: opacity 0.35s;
-      pointer-events: none;
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(200px circle at var(--mx) var(--my),
+        var(--sg,rgba(56,189,248,.07)),transparent 72%);
+      opacity:0; transition:opacity .35s; pointer-events:none; z-index:1;
     }
+    .svc:hover { border-color:rgba(255,255,255,.12); box-shadow:0 32px 72px rgba(0,0,0,.4); }
+    .svc:hover::before { opacity:1; }
+    .svc--a{--sg:rgba(56,189,248,.08);  --sa:#38BDF8;}
+    .svc--b{--sg:rgba(245,158,11,.08);  --sa:#F59E0B;}
+    .svc--c{--sg:rgba(16,185,129,.08);  --sa:#10B981;}
+    .svc--d{--sg:rgba(129,140,248,.08); --sa:#818CF8;}
 
-    .svc:hover {
-      border-color: rgba(255,255,255,0.10);
-      transform: translateY(-4px);
-      box-shadow: 0 28px 64px rgba(0,0,0,0.36);
-    }
-
-    .svc:hover::before { opacity: 1; }
-
-    .svc--a { --svc-glow: rgba(56,189,248,0.07); --svc-acc: #38BDF8; }
-    .svc--b { --svc-glow: rgba(245,158,11,0.07); --svc-acc: #F59E0B; }
-    .svc--c { --svc-glow: rgba(16,185,129,0.07); --svc-acc: #10B981; }
-    .svc--d { --svc-glow: rgba(129,140,248,0.07); --svc-acc: #818CF8; }
+    /* 3D depth layers on card content */
+    .svc__num   { transform:translateZ(5px);  position:relative; z-index:2; }
+    .svc__icon  { transform:translateZ(14px); position:relative; z-index:2; }
+    .svc__title { transform:translateZ(22px); position:relative; z-index:2; }
+    .svc__body  { transform:translateZ(10px); position:relative; z-index:2; }
+    .svc__tags  { transform:translateZ(16px); position:relative; z-index:2; }
 
     .svc__num {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      color: var(--svc-acc);
-      margin-bottom: 20px;
-      opacity: 0.65;
+      font-size:10px; font-weight:600; letter-spacing:.24em;
+      text-transform:uppercase; color:var(--sa); margin-bottom:20px; opacity:.65;
     }
-
-    .svc__icon { font-size: 28px; display: block; margin-bottom: 18px; line-height: 1; }
-
-    .svc__title {
-      font-family: var(--fh);
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
-    .svc__body {
-      font-size: 14px;
-      color: var(--t2);
-      line-height: 1.8;
-      margin-bottom: 24px;
-    }
-
-    .svc__tags { display: flex; flex-wrap: wrap; gap: 7px; }
-
+    .svc__icon { font-size:28px; display:block; margin-bottom:18px; line-height:1; }
+    .svc__title { font-family:var(--fh); font-size:20px; font-weight:700; margin-bottom:12px; }
+    .svc__body  { font-size:14px; color:var(--t2); line-height:1.8; margin-bottom:24px; }
+    .svc__tags  { display:flex; flex-wrap:wrap; gap:7px; }
     .tag {
-      font-size: 11.5px;
-      font-weight: 500;
-      padding: 4px 12px;
-      border-radius: 99px;
-      background: rgba(255,255,255,0.042);
-      border: 1px solid var(--border);
-      color: var(--t2);
-      transition: background 0.2s;
+      font-size:11.5px; font-weight:500; padding:4px 12px;
+      border-radius:99px; background:rgba(255,255,255,.042);
+      border:1px solid var(--border); color:var(--t2);
+      transition:background .2s;
     }
+    .svc:hover .tag { background:rgba(255,255,255,.07); }
 
-    .svc:hover .tag { background: rgba(255,255,255,0.07); }
+    /* Engineering SVG diagram — sits in card background */
+    .svc__svg-bg {
+      position:absolute; bottom:-8px; right:-8px;
+      width:160px; height:120px;
+      opacity:.08; pointer-events:none; z-index:0;
+      transition:opacity .4s;
+      color:var(--sa);
+    }
+    .svc:hover .svc__svg-bg { opacity:.16; }
 
-    /* ═══════════════════════════════════════════════════
-       VALUES
-    ═══════════════════════════════════════════════════ */
+    /* SVG path draw animation — triggered on section enter */
+    .svc__svg-bg .d { stroke-dashoffset:var(--dl,600); animation:none; }
+    .svc.drawn .svc__svg-bg .d {
+      animation:svg-draw 1.8s cubic-bezier(.4,0,.2,1) forwards;
+    }
+    .svc.drawn .svc__svg-bg .d:nth-child(2) { animation-delay:.15s; }
+    .svc.drawn .svc__svg-bg .d:nth-child(3) { animation-delay:.30s; }
+    .svc.drawn .svc__svg-bg .d:nth-child(4) { animation-delay:.45s; }
+    .svc.drawn .svc__svg-bg .d:nth-child(5) { animation-delay:.60s; }
+
+    /* ══════════════════════════════════════════════════
+       VALUE CARDS — 3D FLIP-IN
+    ══════════════════════════════════════════════════ */
     .values__grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 14px;
-      margin-top: 60px;
+      display:grid; grid-template-columns:repeat(5,1fr);
+      gap:14px; margin-top:60px;
     }
-
     .val {
-      padding: 30px 22px;
-      border-radius: var(--r-md);
-      background: var(--card);
-      border: 1px solid var(--border);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.3s, transform 0.3s;
+      padding:30px 22px;
+      border-radius:var(--r-md); background:var(--card);
+      border:1px solid var(--border); text-align:center;
+      position:relative; overflow:hidden;
+      transform-style:preserve-3d;
+      transition:border-color .3s, box-shadow .4s, transform .7s cubic-bezier(.23,1,.32,1);
     }
-
     .val::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 20%; right: 20%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--v-c), transparent);
-      opacity: 0;
-      transition: opacity 0.35s;
+      content:''; position:absolute; bottom:0; left:20%; right:20%;
+      height:1px; background:linear-gradient(90deg,transparent,var(--vc),transparent);
+      opacity:0; transition:opacity .35s;
     }
+    .val:hover { border-color:rgba(255,255,255,.12); box-shadow:0 20px 48px rgba(0,0,0,.36); }
+    .val:hover::after { opacity:1; }
+    .val--1{--vc:#38BDF8} .val--2{--vc:#818CF8} .val--3{--vc:#F59E0B}
+    .val--4{--vc:#10B981} .val--5{--vc:#F472B6}
 
-    .val:hover { border-color: rgba(255,255,255,0.10); transform: translateY(-4px); }
-    .val:hover::after { opacity: 1; }
+    /* 3D depth layers inside value cards */
+    .val__n    { font-size:9.5px; font-weight:700; letter-spacing:.2em; color:var(--vc); opacity:.65; margin-bottom:12px; transform:translateZ(4px); position:relative; }
+    .val__icon { font-size:26px; display:block; margin-bottom:12px; transform:translateZ(16px); position:relative; }
+    .val__title { font-family:var(--fh); font-size:15px; font-weight:700; margin-bottom:10px; transform:translateZ(12px); position:relative; }
+    .val__body { font-size:12.5px; color:var(--t3); line-height:1.7; transform:translateZ(6px); position:relative; }
 
-    .val--1 { --v-c: #38BDF8; }
-    .val--2 { --v-c: #818CF8; }
-    .val--3 { --v-c: #F59E0B; }
-    .val--4 { --v-c: #10B981; }
-    .val--5 { --v-c: #F472B6; }
-
-    .val__n {
-      font-size: 9.5px;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      color: var(--v-c);
-      opacity: 0.65;
-      margin-bottom: 12px;
-    }
-
-    .val__icon { font-size: 26px; display: block; margin-bottom: 12px; }
-
-    .val__title {
-      font-family: var(--fh);
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .val__body { font-size: 12.5px; color: var(--t3); line-height: 1.7; }
-
-    /* ═══════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
        APPROACH
-    ═══════════════════════════════════════════════════ */
+    ══════════════════════════════════════════════════ */
     .approach__grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 40px;
-      margin-top: 60px;
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:40px; margin-top:60px;
     }
-
     .appr {
-      padding-top: 28px;
-      border-top: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
+      padding-top:28px; border-top:1px solid var(--border);
+      position:relative; overflow:hidden;
     }
-
-    /* Animated top border on hover */
     .appr::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      height: 1px; width: 0;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      transition: width 0.5s ease;
+      content:''; position:absolute;
+      top:0; left:0; height:1px; width:0;
+      background:linear-gradient(90deg,var(--c1),var(--c2));
+      transition:width .6s ease;
     }
+    .appr:hover::before { width:100%; }
+    .appr__num { font-family:var(--fh); font-size:10px; letter-spacing:.22em; color:var(--t3); margin-bottom:16px; }
+    .appr__title { font-family:var(--fh); font-size:18px; font-weight:600; margin-bottom:12px; }
+    .appr__body { font-size:14px; color:var(--t2); line-height:1.8; }
 
-    .appr:hover::before { width: 100%; }
-
-    .appr__num {
-      font-family: var(--fh);
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--t3);
-      margin-bottom: 16px;
-    }
-
-    .appr__title {
-      font-family: var(--fh);
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .appr__body { font-size: 14px; color: var(--t2); line-height: 1.8; }
-
-    /* ═══════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
        FOOTER
-    ═══════════════════════════════════════════════════ */
+    ══════════════════════════════════════════════════ */
     .footer {
-      position: relative;
-      z-index: 1;
-      padding: clamp(56px, 8vw, 96px) clamp(24px, 5vw, 80px) 40px;
-      border-top: 1px solid var(--border);
+      position:relative; z-index:1;
+      padding:clamp(56px,8vw,96px) clamp(24px,5vw,80px) 40px;
+      border-top:1px solid var(--border);
     }
-
-    .footer__inner { max-width: 1240px; margin: 0 auto; }
-
+    .footer__inner { max-width:1240px; margin:0 auto; }
     .footer__top {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: end;
-      gap: 40px;
-      padding-bottom: 40px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 28px;
+      display:grid; grid-template-columns:1fr auto 1fr;
+      align-items:end; gap:40px;
+      padding-bottom:40px; border-bottom:1px solid var(--border); margin-bottom:28px;
     }
-
     .footer__brand {
-      font-family: var(--fh);
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-family:var(--fh); font-size:22px; font-weight:700;
+      letter-spacing:.12em; text-transform:uppercase;
     }
-
-    .footer__brand span {
-      display: block;
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.22em;
-      color: var(--t3);
-      margin-top: 4px;
-    }
-
-    .footer__reach { text-align: center; }
-
-    .footer__reach-label {
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      color: var(--t3);
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
+    .footer__brand span { display:block; font-size:10px; font-weight:400; letter-spacing:.22em; color:var(--t3); margin-top:4px; }
+    .footer__reach { text-align:center; }
+    .footer__reach-label { font-size:11px; letter-spacing:.18em; color:var(--t3); text-transform:uppercase; margin-bottom:10px; }
     .footer__email {
-      font-family: var(--fh);
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--t2);
-      border-bottom: 1px solid var(--border-a);
-      padding-bottom: 2px;
-      transition: color 0.2s, border-color 0.2s;
+      font-family:var(--fh); font-size:16px; font-weight:500; color:var(--t2);
+      border-bottom:1px solid var(--borda); padding-bottom:2px;
+      transition:color .2s, border-color .2s;
     }
+    .footer__email:hover { color:var(--t1); border-color:var(--c1); }
+    .footer__links { display:flex; justify-content:flex-end; gap:28px; align-items:flex-end; }
+    .footer__links a { font-size:12.5px; color:var(--t3); transition:color .2s; }
+    .footer__links a:hover { color:var(--t1); }
+    .footer__bottom { display:flex; justify-content:space-between; align-items:center; }
+    .footer__copy, .footer__loc { font-size:12px; color:var(--t3); letter-spacing:.04em; }
 
-    .footer__email:hover { color: var(--t1); border-color: var(--accent); }
-
-    .footer__links {
-      display: flex;
-      justify-content: flex-end;
-      gap: 28px;
-      align-items: flex-end;
-    }
-
-    .footer__links a {
-      font-size: 12.5px;
-      color: var(--t3);
-      transition: color 0.2s;
-    }
-
-    .footer__links a:hover { color: var(--t1); }
-
-    .footer__bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer__copy, .footer__loc { font-size: 12px; color: var(--t3); letter-spacing: 0.04em; }
-
-    /* ═══════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════
        RESPONSIVE
-    ═══════════════════════════════════════════════════ */
-    @media (max-width: 1024px) {
-      .mission__grid  { grid-template-columns: 1fr; gap: 48px; }
-      .values__grid   { grid-template-columns: repeat(3, 1fr); }
-      .approach__grid { grid-template-columns: 1fr 1fr; }
+    ══════════════════════════════════════════════════ */
+    @media(max-width:1024px){
+      .mission__grid{grid-template-columns:1fr;gap:48px}
+      .values__grid{grid-template-columns:repeat(3,1fr)}
+      .approach__grid{grid-template-columns:1fr 1fr}
     }
-
-    @media (max-width: 768px) {
-      .nav__links, .nav__contact { display: none; }
-      .services__grid  { grid-template-columns: 1fr; }
-      .mission__stats  { grid-template-columns: repeat(2, 1fr); }
-      .values__grid    { grid-template-columns: repeat(2, 1fr); }
-      .footer__top     { grid-template-columns: 1fr; text-align: center; gap: 28px; }
-      .footer__links   { justify-content: center; }
+    @media(max-width:768px){
+      .nav__links,.nav__contact{display:none}
+      .services__grid{grid-template-columns:1fr}
+      .mission__stats{grid-template-columns:repeat(2,1fr)}
+      .values__grid{grid-template-columns:repeat(2,1fr)}
+      .footer__top{grid-template-columns:1fr;text-align:center;gap:28px}
+      .footer__links{justify-content:center}
     }
-
-    @media (max-width: 480px) {
-      .values__grid { grid-template-columns: 1fr; }
-    }
+    @media(max-width:480px){ .values__grid{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
 
-<!-- ════════════════════════ NAVIGATION ════════════════════════ -->
+<!-- Cinematic intro overlay (removed by JS after sweep) -->
+<div id="intro-overlay" aria-hidden="true"></div>
+
+<!-- ══════════ NAVIGATION ══════════ -->
 <nav class="nav" id="nav" aria-label="Main navigation">
   <div class="nav__row">
     <a href="#" class="nav__brand" aria-label="Sichon Engineering Company">
@@ -915,29 +543,17 @@
   </div>
 </nav>
 
-<!-- ════════════════════════ HERO ════════════════════════ -->
+<!-- ══════════ HERO ══════════ -->
 <section class="hero" id="home" aria-label="Introduction">
-
-  <!-- Three.js animated background -->
   <canvas id="hero-3d" aria-hidden="true"></canvas>
-
-  <!-- Atmospheric depth orbs -->
   <div class="hero__atm" aria-hidden="true"></div>
-
-  <!-- Content -->
   <div class="hero__body">
-
-    <div class="hero__eyebrow" aria-label="Location and founding year">
-      <div class="hero__eyebrow-line" aria-hidden="true"></div>
-      <div class="hero__eyebrow-dot" aria-hidden="true"></div>
+    <div class="hero__eyebrow">
+      <div class="hero__ey-line" aria-hidden="true"></div>
+      <div class="hero__ey-dot"  aria-hidden="true"></div>
       Nairobi, Kenya &nbsp;·&nbsp; Est. 2026
     </div>
-
-    <!--
-      Each .hw (headline word) is revealed word-by-word by GSAP on load.
-      .hw--block forces a new line for the holographic phrase.
-    -->
-    <h1 class="hero__hl" id="hero-headline" aria-label="Engineering is not merely a technical profession — it is a civic responsibility.">
+    <h1 class="hero__hl" aria-label="Engineering is not merely a technical profession — it is a civic responsibility.">
       <span class="hw">Engineering</span>
       <span class="hw">&nbsp;is not</span><br>
       <span class="hw">merely a</span>
@@ -946,159 +562,110 @@
       <span class="hw hw--block holo">it is a civic</span>
       <span class="hw hw--block holo">responsibility.</span>
     </h1>
-
-    <span class="hero__divider" aria-hidden="true"></span>
-
+    <span class="hero__dash" aria-hidden="true"></span>
     <p class="hero__desc">
       Sichon Engineering Company was formed to address Kenya's measurable
       infrastructure gap through structured, disciplined engineering work.
     </p>
-
   </div>
-
-  <!-- Scrolling ticker -->
+  <!-- scrolling values ticker -->
   <div class="hero__ticker" aria-hidden="true">
     <div class="hero__ticker-inner">
-      <!-- Duplicated for seamless loop -->
       <div class="hero__ticker-set">
-        <span class="hero__ticker-item hero__ticker-item--accent">Safety</span>
+        <span class="hero__ticker-item hero__ticker-item--a">Safety</span>
         <span class="hero__ticker-item">Competence</span>
-        <span class="hero__ticker-item hero__ticker-item--accent">Integrity</span>
+        <span class="hero__ticker-item hero__ticker-item--a">Integrity</span>
         <span class="hero__ticker-item">Respect</span>
-        <span class="hero__ticker-item hero__ticker-item--accent">Aesthetics</span>
+        <span class="hero__ticker-item hero__ticker-item--a">Aesthetics</span>
         <span class="hero__ticker-item">Nairobi, Kenya</span>
         <span class="hero__ticker-item">Est. 2026</span>
         <span class="hero__ticker-item">Built Environment</span>
-        <span class="hero__ticker-item hero__ticker-item--accent">Clean Energy</span>
+        <span class="hero__ticker-item hero__ticker-item--a">Clean Energy</span>
         <span class="hero__ticker-item">Environmental Sustainability</span>
         <span class="hero__ticker-item">Consulting</span>
-        <span class="hero__ticker-item hero__ticker-item--accent">Infrastructure</span>
+        <span class="hero__ticker-item hero__ticker-item--a">Infrastructure</span>
       </div>
+      <!-- duplicate for seamless loop -->
       <div class="hero__ticker-set" aria-hidden="true">
-        <span class="hero__ticker-item hero__ticker-item--accent">Safety</span>
+        <span class="hero__ticker-item hero__ticker-item--a">Safety</span>
         <span class="hero__ticker-item">Competence</span>
-        <span class="hero__ticker-item hero__ticker-item--accent">Integrity</span>
+        <span class="hero__ticker-item hero__ticker-item--a">Integrity</span>
         <span class="hero__ticker-item">Respect</span>
-        <span class="hero__ticker-item hero__ticker-item--accent">Aesthetics</span>
+        <span class="hero__ticker-item hero__ticker-item--a">Aesthetics</span>
         <span class="hero__ticker-item">Nairobi, Kenya</span>
         <span class="hero__ticker-item">Est. 2026</span>
         <span class="hero__ticker-item">Built Environment</span>
-        <span class="hero__ticker-item hero__ticker-item--accent">Clean Energy</span>
+        <span class="hero__ticker-item hero__ticker-item--a">Clean Energy</span>
         <span class="hero__ticker-item">Environmental Sustainability</span>
         <span class="hero__ticker-item">Consulting</span>
-        <span class="hero__ticker-item hero__ticker-item--accent">Infrastructure</span>
+        <span class="hero__ticker-item hero__ticker-item--a">Infrastructure</span>
       </div>
     </div>
   </div>
-
-  <!-- Scroll cue -->
   <div class="hero__scroll" aria-hidden="true">
     <span class="hero__scroll-label">Scroll</span>
     <div class="hero__scroll-track"></div>
   </div>
-
 </section>
 
 <div class="glass-rule"></div>
 
-<!-- ════════════════════════ MISSION ════════════════════════ -->
+<!-- ══════════ MISSION ══════════ -->
 <section class="s" id="mission" aria-label="Our Mission">
   <div class="s__in">
-
     <div class="rv">
       <span class="s__label">Our Mission</span>
-      <h2 class="s__h">
-        Built for Kenya.<br>
-        <span class="holo">Held to global standards.</span>
-      </h2>
+      <h2 class="s__h">Built for Kenya.<br><span class="holo">Held to global standards.</span></h2>
     </div>
-
     <div class="mission__grid">
       <blockquote class="mission__quote rv d1">
-        "Identify real gaps,<br>
-        design viable solutions,<br>
-        execute responsibly,<br>
-        and build trust through<br>
-        performance."
+        "Identify real gaps,<br>design viable solutions,<br>execute responsibly,<br>and build trust through<br>performance."
       </blockquote>
-
       <div class="mission__copy rv d2">
-        <p>
-          Technology is a defining feature of the 21st Century. Nations that harness it
-          thrive; those that neglect it stagnate. Across Kenya, there remains a measurable
-          technological and infrastructure gap — visible in transportation inefficiencies,
-          unreliable energy systems, inadequate drainage, unsafe pedestrian infrastructure,
-          and poorly maintained public spaces.
-        </p>
-        <p>
-          Engineering is the discipline most directly responsible for confronting and
-          correcting these deficiencies. It is not merely a technical profession —
-          it is a civic responsibility.
-        </p>
-        <p>
-          Our team was formed to address practical infrastructure and technological
-          shortcomings through structured, disciplined work. We aim not only to offer
-          services, but to provide reliable solutions that improve safety, efficiency,
-          and sustainability.
-        </p>
+        <p>Technology is a defining feature of the 21st Century. Nations that harness it thrive; those that neglect it stagnate. Across Kenya, there remains a measurable technological and infrastructure gap — visible in transportation inefficiencies, unreliable energy systems, inadequate drainage, unsafe pedestrian infrastructure, and poorly maintained public spaces.</p>
+        <p>Engineering is the discipline most directly responsible for confronting and correcting these deficiencies. It is not merely a technical profession — it is a civic responsibility.</p>
+        <p>Our team was formed to address practical infrastructure and technological shortcomings through structured, disciplined work. We aim not only to offer services, but to provide reliable solutions that improve safety, efficiency, and sustainability.</p>
         <div class="mission__cap">
-          <p>
-            Our design and analysis process is supported by computational tools and
-            AI-assisted simulation — enabling greater precision, reduced material waste,
-            and faster project delivery.
-          </p>
+          <p>Our design and analysis process is supported by computational tools and AI-assisted simulation — enabling greater precision, reduced material waste, and faster project delivery.</p>
         </div>
       </div>
     </div>
-
     <div class="mission__stats rv d2">
-      <div class="stat">
-        <span class="stat__n" data-target="4">0</span>
-        <span class="stat__l">Service Areas</span>
-      </div>
-      <div class="stat">
-        <span class="stat__n" data-target="5">0</span>
-        <span class="stat__l">Core Values</span>
-      </div>
-      <div class="stat">
-        <span class="stat__n" data-target="100">0</span>
-        <span class="stat__l">% Commitment</span>
-      </div>
-      <div class="stat">
-        <span class="stat__n" data-target="2026">0</span>
-        <span class="stat__l">Founded</span>
-      </div>
+      <div class="stat"><span class="stat__n" data-target="4">0</span><span class="stat__l">Service Areas</span></div>
+      <div class="stat"><span class="stat__n" data-target="5">0</span><span class="stat__l">Core Values</span></div>
+      <div class="stat"><span class="stat__n" data-target="100">0</span><span class="stat__l">% Commitment</span></div>
+      <div class="stat"><span class="stat__n" data-target="2026">0</span><span class="stat__l">Founded</span></div>
     </div>
-
   </div>
 </section>
 
 <div class="glass-rule"></div>
 
-<!-- ════════════════════════ SERVICES ════════════════════════ -->
+<!-- ══════════ SERVICES ══════════ -->
 <section class="s" id="services" aria-label="Our Services">
   <div class="s__in">
-
     <div class="rv">
       <span class="s__label">What We Do</span>
       <h2 class="s__h">Four areas of practice.</h2>
-      <p class="s__p">
-        From drawing boards to completed infrastructure — delivered with precision,
-        within budget, and built to last.
-      </p>
+      <p class="s__p">From drawing boards to completed infrastructure — delivered with precision, within budget, and built to last.</p>
     </div>
-
     <div class="services__grid">
 
+      <!-- Built Environment -->
       <div class="svc svc--a rv d1">
+        <!-- Engineering SVG: structural truss frame -->
+        <svg class="svc__svg-bg" viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <polyline class="d" stroke-dasharray="480" style="--dl:480" points="0,145 100,5 200,145"/>
+          <line    class="d" stroke-dasharray="200" style="--dl:200" x1="0"   y1="145" x2="200" y2="145"/>
+          <line    class="d" stroke-dasharray="100" style="--dl:100" x1="100" y1="5"   x2="100" y2="145"/>
+          <line    class="d" stroke-dasharray="170" style="--dl:170" x1="50"  y1="75"  x2="150" y2="75"/>
+          <line    class="d" stroke-dasharray="100" style="--dl:100" x1="50"  y1="75"  x2="50"  y2="145"/>
+          <line    class="d" stroke-dasharray="100" style="--dl:100" x1="150" y1="75"  x2="150" y2="145"/>
+        </svg>
         <div class="svc__num">01</div>
         <span class="svc__icon" aria-hidden="true">🏗️</span>
         <div class="svc__title">Built Environment</div>
-        <div class="svc__body">
-          The built environment should reflect a balance between functionality,
-          sustainability, and aesthetic value. We deliver practical, cost-effective,
-          and durable solutions tailored to local contexts and global standards.
-        </div>
+        <div class="svc__body">The built environment should reflect a balance between functionality, sustainability, and aesthetic value. We deliver practical, cost-effective, and durable solutions tailored to local contexts and global standards.</div>
         <div class="svc__tags">
           <span class="tag">Drawing &amp; Design</span>
           <span class="tag">Fencing &amp; Retaining Walls</span>
@@ -1108,16 +675,22 @@
         </div>
       </div>
 
+      <!-- Clean Energy -->
       <div class="svc svc--b rv d2">
+        <!-- Engineering SVG: solar radial diagram -->
+        <svg class="svc__svg-bg" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <circle class="d" stroke-dasharray="125" style="--dl:125" cx="100" cy="100" r="20"/>
+          <circle class="d" stroke-dasharray="314" style="--dl:314" cx="100" cy="100" r="50"/>
+          <circle class="d" stroke-dasharray="502" style="--dl:502" cx="100" cy="100" r="80"/>
+          <line   class="d" stroke-dasharray="30"  style="--dl:30"  x1="100" y1="10"  x2="100" y2="30"/>
+          <line   class="d" stroke-dasharray="30"  style="--dl:30"  x1="100" y1="170" x2="100" y2="190"/>
+          <line   class="d" stroke-dasharray="30"  style="--dl:30"  x1="10"  y1="100" x2="30"  y2="100"/>
+          <line   class="d" stroke-dasharray="30"  style="--dl:30"  x1="170" y1="100" x2="190" y2="100"/>
+        </svg>
         <div class="svc__num">02</div>
         <span class="svc__icon" aria-hidden="true">☀️</span>
         <div class="svc__title">Clean Energy</div>
-        <div class="svc__body">
-          We are committed to advancing clean energy solutions through the design
-          and implementation of solar systems tailored to residential, commercial,
-          and institutional needs. Our goal is reliable, affordable, and sustainable
-          energy access.
-        </div>
+        <div class="svc__body">Advancing clean energy solutions through the design and implementation of solar systems tailored to residential, commercial, and institutional needs. Reliable, affordable, sustainable energy access.</div>
         <div class="svc__tags">
           <span class="tag">Solar Design</span>
           <span class="tag">Residential Systems</span>
@@ -1126,15 +699,20 @@
         </div>
       </div>
 
+      <!-- Environmental -->
       <div class="svc svc--c rv d3">
+        <!-- Engineering SVG: topographic contour curves -->
+        <svg class="svc__svg-bg" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <ellipse class="d" stroke-dasharray="280" style="--dl:280" cx="100" cy="130" rx="90" ry="30"/>
+          <ellipse class="d" stroke-dasharray="220" style="--dl:220" cx="100" cy="110" rx="70" ry="30"/>
+          <ellipse class="d" stroke-dasharray="160" style="--dl:160" cx="100" cy="90"  rx="50" ry="28"/>
+          <ellipse class="d" stroke-dasharray="110" style="--dl:110" cx="100" cy="72"  rx="34" ry="22"/>
+          <ellipse class="d" stroke-dasharray="70"  style="--dl:70"  cx="100" cy="58"  rx="20" ry="14"/>
+        </svg>
         <div class="svc__num">03</div>
         <span class="svc__icon" aria-hidden="true">🌳</span>
         <div class="svc__title">Environmental Sustainability</div>
-        <div class="svc__body">
-          As we interact with and shape our environment, it is incumbent upon us
-          to ensure that our impact is positive and lasting. We enhance the natural
-          landscape so that future generations inherit a stronger foundation.
-        </div>
+        <div class="svc__body">Our impact must be positive and lasting. We enhance the natural landscape so that future generations inherit a stronger foundation — guided by ecological science and long-term thinking.</div>
         <div class="svc__tags">
           <span class="tag">Tree Planting</span>
           <span class="tag">Native Species Selection</span>
@@ -1143,15 +721,23 @@
         </div>
       </div>
 
+      <!-- Consulting -->
       <div class="svc svc--d rv d4">
+        <!-- Engineering SVG: node graph -->
+        <svg class="svc__svg-bg" viewBox="0 0 200 180" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <circle class="d" stroke-dasharray="50"  style="--dl:50"  cx="100" cy="40"  r="8"/>
+          <circle class="d" stroke-dasharray="50"  style="--dl:50"  cx="40"  cy="130" r="8"/>
+          <circle class="d" stroke-dasharray="50"  style="--dl:50"  cx="160" cy="130" r="8"/>
+          <circle class="d" stroke-dasharray="50"  style="--dl:50"  cx="100" cy="160" r="8"/>
+          <line   class="d" stroke-dasharray="110" style="--dl:110" x1="100" y1="48"  x2="40"  y2="122"/>
+          <line   class="d" stroke-dasharray="110" style="--dl:110" x1="100" y1="48"  x2="160" y2="122"/>
+          <line   class="d" stroke-dasharray="120" style="--dl:120" x1="40"  y1="138" x2="160" y2="138"/>
+          <line   class="d" stroke-dasharray="60"  style="--dl:60"  x1="100" y1="138" x2="100" y2="152"/>
+        </svg>
         <div class="svc__num">04</div>
         <span class="svc__icon" aria-hidden="true">💡</span>
         <div class="svc__title">Consulting</div>
-        <div class="svc__body">
-          Good advice saves time and money, and builds trust. We provide strategic
-          consulting across infrastructure planning, project management, regulatory
-          compliance, and technical feasibility — backed by genuine field expertise.
-        </div>
+        <div class="svc__body">Good advice saves time and money, and builds trust. Strategic consulting across infrastructure planning, project management, regulatory compliance, and technical feasibility.</div>
         <div class="svc__tags">
           <span class="tag">Project Feasibility</span>
           <span class="tag">Regulatory Compliance</span>
@@ -1166,120 +752,48 @@
 
 <div class="glass-rule"></div>
 
-<!-- ════════════════════════ VALUES ════════════════════════ -->
+<!-- ══════════ VALUES ══════════ -->
 <section class="s" id="values" aria-label="Our Values">
   <div class="s__in">
-
-    <div class="rv" style="text-align:center; max-width:580px; margin:0 auto 60px;">
-      <span class="s__label" style="justify-content:center;">What We Stand For</span>
-      <h2 class="s__h" style="text-align:center;">
-        Five values.<br>
-        <span class="holo">No exceptions.</span>
-      </h2>
+    <div class="rv" style="text-align:center;max-width:580px;margin:0 auto 60px">
+      <span class="s__label" style="justify-content:center">What We Stand For</span>
+      <h2 class="s__h" style="text-align:center">Five values.<br><span class="holo">No exceptions.</span></h2>
     </div>
-
     <div class="values__grid">
-      <div class="val val--1 rv d1">
-        <div class="val__n">01</div>
-        <span class="val__icon" aria-hidden="true">🛡️</span>
-        <div class="val__title">Safety</div>
-        <div class="val__body">
-          Safety is the first measure of engineering success. No compromise is
-          acceptable where human life is concerned.
-        </div>
-      </div>
-
-      <div class="val val--2 rv d2">
-        <div class="val__n">02</div>
-        <span class="val__icon" aria-hidden="true">⚙️</span>
-        <div class="val__title">Competence</div>
-        <div class="val__body">
-          Excellence requires technical skill, coordination, leadership, and
-          disciplined resource management.
-        </div>
-      </div>
-
-      <div class="val val--3 rv d3">
-        <div class="val__n">03</div>
-        <span class="val__icon" aria-hidden="true">🤝</span>
-        <div class="val__title">Integrity</div>
-        <div class="val__body">
-          Transparency in budgeting, documentation, and communication is
-          foundational. Integrity is embedded in our process.
-        </div>
-      </div>
-
-      <div class="val val--4 rv d4">
-        <div class="val__n">04</div>
-        <span class="val__icon" aria-hidden="true">🌍</span>
-        <div class="val__title">Respect</div>
-        <div class="val__body">
-          We design with community needs, environmental responsibility, and
-          professional fairness in mind at all times.
-        </div>
-      </div>
-
-      <div class="val val--5 rv d5">
-        <div class="val__n">05</div>
-        <span class="val__icon" aria-hidden="true">✦</span>
-        <div class="val__title">Aesthetics</div>
-        <div class="val__body">
-          Function and beauty can coexist. Good engineering enhances both
-          utility and visual harmony.
-        </div>
-      </div>
+      <div class="val val--1 rv d1"><div class="val__n">01</div><span class="val__icon" aria-hidden="true">🛡️</span><div class="val__title">Safety</div><div class="val__body">Safety is the first measure of engineering success. No compromise is acceptable where human life is concerned.</div></div>
+      <div class="val val--2 rv d2"><div class="val__n">02</div><span class="val__icon" aria-hidden="true">⚙️</span><div class="val__title">Competence</div><div class="val__body">Excellence requires technical skill, coordination, leadership, and disciplined resource management.</div></div>
+      <div class="val val--3 rv d3"><div class="val__n">03</div><span class="val__icon" aria-hidden="true">🤝</span><div class="val__title">Integrity</div><div class="val__body">Transparency in budgeting, documentation, and communication is foundational. Integrity is embedded in our process.</div></div>
+      <div class="val val--4 rv d4"><div class="val__n">04</div><span class="val__icon" aria-hidden="true">🌍</span><div class="val__title">Respect</div><div class="val__body">We design with community needs, environmental responsibility, and professional fairness in mind.</div></div>
+      <div class="val val--5 rv d5"><div class="val__n">05</div><span class="val__icon" aria-hidden="true">✦</span><div class="val__title">Aesthetics</div><div class="val__body">Function and beauty can coexist. Good engineering enhances both utility and visual harmony.</div></div>
     </div>
   </div>
 </section>
 
 <div class="glass-rule"></div>
 
-<!-- ════════════════════════ APPROACH ════════════════════════ -->
+<!-- ══════════ APPROACH ══════════ -->
 <section class="s" id="approach" aria-label="How We Work">
   <div class="s__in">
-
     <div class="rv">
       <span class="s__label">How We Work</span>
-      <h2 class="s__h">
-        Structured. Disciplined.<br>
-        <span class="holo">Accountable.</span>
-      </h2>
-      <p class="s__p">
-        Our approach is grounded in rigorous process, honest communication,
-        and a commitment to delivering exactly what we promise.
-      </p>
+      <h2 class="s__h">Structured. Disciplined.<br><span class="holo">Accountable.</span></h2>
+      <p class="s__p">Rigorous process, honest communication, and a commitment to delivering exactly what we promise.</p>
     </div>
-
     <div class="approach__grid">
       <div class="appr rv d1">
         <div class="appr__num">Step 01</div>
         <div class="appr__title">Identify the Gap</div>
-        <div class="appr__body">
-          We start by understanding the real problem — conducting thorough site
-          assessments, stakeholder consultation, and analysis to define the scope
-          accurately before a single line is drawn.
-        </div>
+        <div class="appr__body">We start by understanding the real problem — conducting thorough site assessments, stakeholder consultation, and analysis to define the scope accurately before a single line is drawn.</div>
       </div>
-
       <div class="appr rv d2">
         <div class="appr__num">Step 02</div>
         <div class="appr__title">Design with Rigour</div>
-        <div class="appr__body">
-          High-quality drawings are the foundation of efficient and resilient
-          structures. We use industry-standard tools — including computational
-          design and simulation — to optimise cost, material use, and structural
-          performance before construction begins.
-        </div>
+        <div class="appr__body">High-quality drawings are the foundation of efficient and resilient structures. We use industry-standard tools — including computational design and simulation — to optimise cost, material use, and structural performance before construction begins.</div>
       </div>
-
       <div class="appr rv d3">
         <div class="appr__num">Step 03</div>
         <div class="appr__title">Execute Responsibly</div>
-        <div class="appr__body">
-          Every project is delivered with clear documentation, transparent
-          budgeting, and regular reporting. Safety, regulatory compliance,
-          and community respect are non-negotiable at every stage.
-        </div>
+        <div class="appr__body">Every project is delivered with clear documentation, transparent budgeting, and regular reporting. Safety, regulatory compliance, and community respect are non-negotiable at every stage.</div>
       </div>
     </div>
   </div>
@@ -1287,25 +801,15 @@
 
 <div class="glass-rule"></div>
 
-<!-- ════════════════════════ FOOTER / CONTACT ════════════════════════ -->
+<!-- ══════════ FOOTER ══════════ -->
 <footer class="footer" id="contact" aria-label="Footer and Contact">
   <div class="footer__inner">
-
     <div class="footer__top rv">
-      <div>
-        <div class="footer__brand">
-          Sichon
-          <span>Engineering Company</span>
-        </div>
-      </div>
-
+      <div class="footer__brand">Sichon<span>Engineering Company</span></div>
       <div class="footer__reach">
         <p class="footer__reach-label">Get in touch</p>
-        <a href="mailto:info@sichonengineering.co.ke" class="footer__email">
-          info@sichonengineering.co.ke
-        </a>
+        <a href="mailto:info@sichonengineering.co.ke" class="footer__email">info@sichonengineering.co.ke</a>
       </div>
-
       <nav class="footer__links" aria-label="Footer navigation">
         <a href="#mission">Mission</a>
         <a href="#services">Services</a>
@@ -1313,269 +817,342 @@
         <a href="#approach">How We Work</a>
       </nav>
     </div>
-
     <div class="footer__bottom">
       <span class="footer__copy">© 2026 Sichon Engineering Company. All rights reserved.</span>
       <span class="footer__loc">Nairobi, Kenya</span>
     </div>
-
   </div>
 </footer>
 
-<!-- ════════════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════════
      JAVASCRIPT
-════════════════════════════════════════════════════════════ -->
+══════════════════════════════════════════════════════ -->
 <script>
 (function () {
   'use strict';
 
-  /* ─────────────────────────────────────────────────────────
-     THREE.JS HERO BACKGROUND
-     — An animated topographic wireframe mesh (like a
-       structural analysis grid or terrain survey) that
-       breathes slowly via layered sine-wave displacement.
-     — A rotating wireframe icosahedron sits upper-right,
-       evoking a structural node analysis model.
-     — Mouse movement tilts the entire scene subtly.
-  ───────────────────────────────────────────────────────── */
-  (function initThree () {
+  /* ────────────────────────────────────────────────────
+     1. LENIS SMOOTH SCROLL + GSAP INTEGRATION
+  ─────────────────────────────────────────────────── */
+  var lenis;
+  if (typeof Lenis !== 'undefined') {
+    lenis = new Lenis({
+      duration:     1.35,
+      easing:       function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+      smoothWheel:  true,
+      wheelMultiplier: 0.9
+    });
+    function rafLenis(time) { lenis.raf(time); requestAnimationFrame(rafLenis); }
+    requestAnimationFrame(rafLenis);
+    if (typeof ScrollTrigger !== 'undefined') {
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    }
+  }
+
+  /* ────────────────────────────────────────────────────
+     2. THREE.JS HERO BACKGROUND
+     Topographic wireframe mesh that breathes via layered
+     sine waves. Two rotating wireframe geometric forms
+     (icosahedron centered at hero middle, small octahedron
+     lower-left). Mouse tilts the entire scene.
+  ─────────────────────────────────────────────────── */
+  (function initThree() {
     if (typeof THREE === 'undefined') return;
+    var canvas  = document.getElementById('hero-3d');
+    var section = canvas.closest('.hero');
+    var W = section.clientWidth, H = section.clientHeight;
 
-    const canvas   = document.getElementById('hero-3d');
-    const section  = canvas.closest('.hero');
-    let   W = section.clientWidth,
-          H = section.clientHeight;
-
-    /* Renderer */
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
     renderer.setSize(W, H);
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
 
-    /* Scene + camera */
-    const scene  = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(48, W / H, 0.1, 200);
+    var scene  = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(48, W / H, 0.1, 200);
     camera.position.set(0, 6.5, 11);
     camera.lookAt(0, -1.5, 0);
 
-    /* ── TOPOGRAPHIC GRID MESH ────────────────────────── */
-    const gridGeo = new THREE.PlaneGeometry(34, 26, 64, 48);
-    const gridMat = new THREE.MeshBasicMaterial({
-      color:       0x38BDF8,
-      wireframe:   true,
-      transparent: true,
-      opacity:     0.055
-    });
-    const gridMesh = new THREE.Mesh(gridGeo, gridMat);
-    gridMesh.rotation.x = -Math.PI / 2.08; /* tilt near-horizontal, extending to horizon */
+    /* Topographic grid */
+    var gridGeo = new THREE.PlaneGeometry(34, 26, 64, 48);
+    var gridMat = new THREE.MeshBasicMaterial({ color: 0x38BDF8, wireframe: true, transparent: true, opacity: 0.055 });
+    var gridMesh = new THREE.Mesh(gridGeo, gridMat);
+    gridMesh.rotation.x = -Math.PI / 2.08;
     gridMesh.position.y = -3.5;
     scene.add(gridMesh);
 
-    /* ── STRUCTURAL WIREFRAME OBJECT (upper-right) ────── */
-    const isoGeo   = new THREE.IcosahedronGeometry(3.2, 1);
-    const isoWire  = new THREE.WireframeGeometry(isoGeo);
-    const isoMat   = new THREE.LineBasicMaterial({ color: 0x818CF8, transparent: true, opacity: 0.20 });
-    const isoLines = new THREE.LineSegments(isoWire, isoMat);
-    isoLines.position.set(5.2, 2.0, -1.5);
+    /* Icosahedron — centered vertically (y=-0.8 puts it mid-viewport) */
+    var isoGeo   = new THREE.IcosahedronGeometry(3.2, 1);
+    var isoWire  = new THREE.WireframeGeometry(isoGeo);
+    var isoMat   = new THREE.LineBasicMaterial({ color: 0x818CF8, transparent: true, opacity: 0.22 });
+    var isoLines = new THREE.LineSegments(isoWire, isoMat);
+    isoLines.position.set(5.0, -0.8, -1.2);
     scene.add(isoLines);
 
-    /* Second smaller form, left-side, for depth balance */
-    const smallGeo   = new THREE.OctahedronGeometry(1.4, 0);
-    const smallWire  = new THREE.WireframeGeometry(smallGeo);
-    const smallMat   = new THREE.LineBasicMaterial({ color: 0x38BDF8, transparent: true, opacity: 0.12 });
-    const smallLines = new THREE.LineSegments(smallWire, smallMat);
-    smallLines.position.set(-5.5, 1.2, -3);
-    scene.add(smallLines);
+    /* Small octahedron — lower-left for depth */
+    var octGeo   = new THREE.OctahedronGeometry(1.4, 0);
+    var octWire  = new THREE.WireframeGeometry(octGeo);
+    var octMat   = new THREE.LineBasicMaterial({ color: 0x38BDF8, transparent: true, opacity: 0.12 });
+    var octLines = new THREE.LineSegments(octWire, octMat);
+    octLines.position.set(-5.5, -2.0, -3);
+    scene.add(octLines);
 
-    /* ── MOUSE PARALLAX ──────────────────────────────── */
-    let targetRY = 0, targetRX = 0;
-
+    /* Mouse parallax */
+    var tRY = 0, tRX = 0;
     document.addEventListener('mousemove', function (e) {
-      targetRY = (e.clientX / window.innerWidth  - 0.5) *  0.14;
-      targetRX = (e.clientY / window.innerHeight - 0.5) * -0.06;
+      tRY = (e.clientX / window.innerWidth  - 0.5) *  0.14;
+      tRX = (e.clientY / window.innerHeight - 0.5) * -0.06;
     }, { passive: true });
 
-    /* ── ANIMATION LOOP ──────────────────────────────── */
-    let rafId;
-    const pos    = gridGeo.attributes.position;
-    const startT = performance.now();
-
-    function tick () {
+    /* Animation loop */
+    var rafId, pos = gridGeo.attributes.position, t0 = performance.now();
+    function tick() {
       rafId = requestAnimationFrame(tick);
-      const t = (performance.now() - startT) * 0.001;
+      var t = (performance.now() - t0) * 0.001;
 
-      /* Animate grid vertices — layered sine waves */
-      for (let i = 0; i < pos.count; i++) {
-        const x = pos.getX(i);
-        const y = pos.getY(i);
-        const z =
-          Math.sin(x * 0.32 + t * 0.38) * Math.cos(y * 0.26 + t * 0.28) * 0.72 +
-          Math.sin(x * 0.68 + t * 0.60) * Math.sin(y * 0.52 + t * 0.50) * 0.32 +
-          Math.sin((x - y) * 0.42 + t * 0.22) * 0.18;
+      /* Undulate grid vertices */
+      for (var i = 0; i < pos.count; i++) {
+        var x = pos.getX(i), y = pos.getY(i);
+        var z = Math.sin(x*.32+t*.38)*Math.cos(y*.26+t*.28)*.72
+              + Math.sin(x*.68+t*.60)*Math.sin(y*.52+t*.50)*.32
+              + Math.sin((x-y)*.42+t*.22)*.18;
         pos.setZ(i, z);
       }
       pos.needsUpdate = true;
 
-      /* Rotate the geometric forms */
-      isoLines.rotation.y   += 0.0038;
-      isoLines.rotation.x   += 0.0014;
-      isoLines.rotation.z   += 0.0008;
-      smallLines.rotation.y -= 0.0025;
-      smallLines.rotation.z += 0.0018;
+      isoLines.rotation.y += 0.0038; isoLines.rotation.x += 0.0014; isoLines.rotation.z += 0.0008;
+      octLines.rotation.y -= 0.0025; octLines.rotation.z += 0.0018;
 
-      /* Smooth mouse parallax (lerp) */
-      scene.rotation.y += (targetRY - scene.rotation.y) * 0.045;
-      scene.rotation.x += (targetRX - scene.rotation.x) * 0.045;
+      /* Smooth mouse parallax */
+      scene.rotation.y += (tRY - scene.rotation.y) * 0.045;
+      scene.rotation.x += (tRX - scene.rotation.x) * 0.045;
 
       renderer.render(scene, camera);
     }
-
     tick();
 
-    /* Resize handler */
-    function onResize () {
-      W = section.clientWidth;
-      H = section.clientHeight;
-      camera.aspect = W / H;
-      camera.updateProjectionMatrix();
-      renderer.setSize(W, H);
-    }
-
-    window.addEventListener('resize', onResize, { passive: true });
-
-    /* Stop rendering when hero is scrolled out of view (performance) */
-    const heroObs = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) tick();
-      else cancelAnimationFrame(rafId);
+    /* Pause when hero is off-screen */
+    var obs = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) tick(); else cancelAnimationFrame(rafId);
     }, { threshold: 0 });
-    heroObs.observe(section);
+    obs.observe(section);
+
+    window.addEventListener('resize', function () {
+      W = section.clientWidth; H = section.clientHeight;
+      camera.aspect = W / H; camera.updateProjectionMatrix();
+      renderer.setSize(W, H);
+    }, { passive: true });
   }());
 
-  /* ─────────────────────────────────────────────────────────
-     NAV SCROLL STATE
-  ───────────────────────────────────────────────────────── */
-  const nav = document.getElementById('nav');
+  /* ────────────────────────────────────────────────────
+     3. CINEMATIC PAGE LOAD — CURTAIN SWEEP
+  ─────────────────────────────────────────────────── */
+  var overlay = document.getElementById('intro-overlay');
+  if (typeof gsap !== 'undefined' && overlay) {
+    gsap.to(overlay, {
+      scaleY:   0,
+      duration: 1.3,
+      ease:     'expo.inOut',
+      delay:    0.15,
+      onComplete: function () { overlay.remove(); }
+    });
+    /* Nav slides in after curtain */
+    gsap.from('#nav', { y: -40, opacity: 0, duration: 0.7, ease: 'power3.out', delay: 0.7 });
+  }
+
+  /* ────────────────────────────────────────────────────
+     4. KINETIC HEADLINE — word-by-word reveal
+  ─────────────────────────────────────────────────── */
+  function revealHeadline() {
+    var words = document.querySelectorAll('.hero__hl .hw');
+    words.forEach(function (el, i) {
+      setTimeout(function () {
+        el.style.transition = 'opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1), filter .85s cubic-bezier(.22,1,.36,1)';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+        el.style.filter = 'blur(0)';
+      }, 900 + i * 120); /* offset after curtain finishes */
+    });
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(revealHeadline);
+  else setTimeout(revealHeadline, 900);
+
+  /* ────────────────────────────────────────────────────
+     5. GSAP CINEMATIC SECTION REVEALS
+     Each section enters with a 3D perspective tilt —
+     like a camera craning down to face the content.
+  ─────────────────────────────────────────────────── */
+  window.addEventListener('load', function () {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* Cinematic 3D section entrance */
+    document.querySelectorAll('.s').forEach(function (section) {
+      var inner = section.querySelector('.s__in');
+      gsap.set(inner, { transformPerspective: 1400, transformOrigin: '50% -8%' });
+      gsap.from(inner, {
+        rotationX:  10,
+        y:          70,
+        scale:      0.97,
+        opacity:    0,
+        duration:   1.15,
+        ease:       'power3.out',
+        scrollTrigger: { trigger: section, start: 'top 86%', once: true }
+      });
+    });
+
+    /* Service cards — stagger + 3D slide-in */
+    gsap.utils.toArray('.svc').forEach(function (el, i) {
+      gsap.from(el, {
+        opacity: 0, y: 60, rotationX: 8, scale: 0.96,
+        transformPerspective: 1200, transformOrigin: 'center bottom',
+        duration: 1.0, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+        delay: (i % 2) * 0.16,
+        onComplete: function () { el.classList.add('drawn'); }
+      });
+    });
+
+    /* Values — 3D flip-in from Y axis */
+    gsap.utils.toArray('.val').forEach(function (el, i) {
+      gsap.from(el, {
+        opacity: 0, rotationY: -70, scale: 0.88,
+        transformPerspective: 900, transformOrigin: 'left center',
+        duration: 0.85, ease: 'back.out(1.4)',
+        scrollTrigger: { trigger: el, start: 'top 94%', once: true },
+        delay: i * 0.1
+      });
+    });
+
+    /* Approach steps — 3D slide from depth */
+    gsap.utils.toArray('.appr').forEach(function (el, i) {
+      gsap.from(el, {
+        opacity: 0, z: -80, y: 30,
+        transformPerspective: 1000,
+        duration: 0.9, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+        delay: i * 0.14
+      });
+    });
+
+    /* Stats — dramatic scale-up */
+    gsap.utils.toArray('.stat').forEach(function (el, i) {
+      gsap.from(el, {
+        opacity: 0, scale: 0.7,
+        transformPerspective: 800,
+        duration: 0.7, ease: 'back.out(1.6)',
+        scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+        delay: i * 0.12
+      });
+    });
+
+    /* Mission quote — clip-path wipe reveal */
+    var quote = document.querySelector('.mission__quote');
+    if (quote) {
+      gsap.from(quote, {
+        clipPath: 'inset(0 100% 0 0)',
+        duration: 1.2, ease: 'power3.inOut',
+        scrollTrigger: { trigger: quote, start: 'top 85%', once: true }
+      });
+    }
+
+    /* Glass-rules — expand from center */
+    gsap.utils.toArray('.glass-rule').forEach(function (el) {
+      gsap.from(el, {
+        scaleX: 0, transformOrigin: 'center',
+        duration: 1.0, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 95%', once: true }
+      });
+    });
+
+    /* Parallax on hero orbs */
+    gsap.to('.hero__atm::before', {
+      yPercent: -20, ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 2 }
+    });
+  });
+
+  /* ────────────────────────────────────────────────────
+     6. 3D CARD TILT (service + value cards)
+     Mouse position drives perspective rotateX/Y.
+     Content layers at different translateZ depths
+     create a parallax-within-the-card effect.
+  ─────────────────────────────────────────────────── */
+  document.querySelectorAll('.svc, .val').forEach(function (card) {
+    var rect, cx, cy, isEntered = false;
+
+    card.addEventListener('mouseenter', function () {
+      rect = card.getBoundingClientRect();
+      cx = rect.left + rect.width / 2;
+      cy = rect.top  + rect.height / 2;
+      isEntered = true;
+      card.style.transition = 'transform .12s ease, box-shadow .12s ease, border-color .4s';
+    });
+
+    card.addEventListener('mousemove', function (e) {
+      if (!isEntered) return;
+      var dx = (e.clientX - cx) / (rect.width  / 2);
+      var dy = (e.clientY - cy) / (rect.height / 2);
+      var ry =  dx * 14;
+      var rx = -dy * 9;
+      card.style.transform = 'perspective(900px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(16px) scale(1.025)';
+      card.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width  * 100) + '%');
+      card.style.setProperty('--my', ((e.clientY - rect.top)  / rect.height * 100) + '%');
+    });
+
+    card.addEventListener('mouseleave', function () {
+      isEntered = false;
+      card.style.transition = 'transform .75s cubic-bezier(.23,1,.32,1), box-shadow .75s, border-color .4s';
+      card.style.transform = '';
+    });
+  });
+
+  /* ────────────────────────────────────────────────────
+     7. NAV SCROLL STATE
+  ─────────────────────────────────────────────────── */
+  var nav = document.getElementById('nav');
   window.addEventListener('scroll', function () {
     nav.classList.toggle('on', window.scrollY > 50);
   }, { passive: true });
 
-  /* ─────────────────────────────────────────────────────────
-     KINETIC HEADLINE — WORD BY WORD REVEAL
-     Runs after a short delay so Three.js initialises first.
-  ───────────────────────────────────────────────────────── */
-  function revealHeadline () {
-    const words = document.querySelectorAll('.hero__hl .hw');
-    words.forEach(function (el, i) {
-      setTimeout(function () {
-        el.style.transition = 'opacity 0.85s cubic-bezier(0.22,1,0.36,1), transform 0.85s cubic-bezier(0.22,1,0.36,1), filter 0.85s cubic-bezier(0.22,1,0.36,1)';
-        el.style.opacity   = '1';
-        el.style.transform = 'translateY(0)';
-        el.style.filter    = 'blur(0px)';
-      }, 300 + i * 120);
-    });
-  }
-
-  /* Kick off after fonts are ready (or 500ms, whichever first) */
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(revealHeadline);
-  } else {
-    setTimeout(revealHeadline, 500);
-  }
-
-  /* ─────────────────────────────────────────────────────────
-     GSAP ENHANCED ANIMATIONS (optional upgrade layer)
-  ───────────────────────────────────────────────────────── */
-  window.addEventListener('load', function () {
-    if (typeof gsap === 'undefined') return;
-    gsap.registerPlugin(ScrollTrigger);
-
-    /* Service cards */
-    gsap.utils.toArray('.svc').forEach(function (el, i) {
-      gsap.from(el, {
-        opacity: 0, y: 55, filter: 'blur(16px)',
-        duration: 0.9, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 92%', once: true },
-        delay: (i % 2) * 0.14
-      });
-    });
-
-    /* Values */
-    gsap.utils.toArray('.val').forEach(function (el, i) {
-      gsap.from(el, {
-        opacity: 0, y: 38, filter: 'blur(12px)',
-        duration: 0.75, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 94%', once: true },
-        delay: i * 0.09
-      });
-    });
-
-    /* Approach steps */
-    gsap.utils.toArray('.appr').forEach(function (el, i) {
-      gsap.from(el, {
-        opacity: 0, x: -24, filter: 'blur(10px)',
-        duration: 0.8, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 92%', once: true },
-        delay: i * 0.12
-      });
-    });
-  });
-
-  /* ─────────────────────────────────────────────────────────
-     SCROLL REVEAL (IntersectionObserver)
-  ───────────────────────────────────────────────────────── */
+  /* ────────────────────────────────────────────────────
+     8. SCROLL REVEAL (IntersectionObserver fallback)
+  ─────────────────────────────────────────────────── */
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-        io.unobserve(e.target);
-      }
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -44px 0px' });
-
   document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
 
-  /* ─────────────────────────────────────────────────────────
-     CARD MOUSE-TRACKED GLOW
-  ───────────────────────────────────────────────────────── */
-  document.querySelectorAll('.svc').forEach(function (el) {
-    el.addEventListener('mousemove', function (e) {
-      var r = el.getBoundingClientRect();
-      el.style.setProperty('--mx', ((e.clientX - r.left) / r.width  * 100) + '%');
-      el.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100) + '%');
-    });
-  });
-
-  /* ─────────────────────────────────────────────────────────
-     STATS COUNTER
-  ───────────────────────────────────────────────────────── */
-  function countUp (el) {
+  /* ────────────────────────────────────────────────────
+     9. STATS COUNTER
+  ─────────────────────────────────────────────────── */
+  function countUp(el) {
     var to = +el.dataset.target, dur = 1500, t0 = performance.now();
-    (function tick (now) {
+    (function tick(now) {
       var p = Math.min((now - t0) / dur, 1);
-      el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * to).toLocaleString();
-      if (p < 1) requestAnimationFrame(tick);
-      else el.textContent = to.toLocaleString();
+      el.textContent = Math.round((1 - Math.pow(1-p,3)) * to).toLocaleString();
+      if (p < 1) requestAnimationFrame(tick); else el.textContent = to.toLocaleString();
     }(t0));
   }
-
   var cio = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) { countUp(e.target); cio.unobserve(e.target); }
-    });
+    entries.forEach(function (e) { if (e.isIntersecting) { countUp(e.target); cio.unobserve(e.target); } });
   }, { threshold: 0.6 });
-
   document.querySelectorAll('.stat__n[data-target]').forEach(function (el) { cio.observe(el); });
 
-  /* ─────────────────────────────────────────────────────────
-     SMOOTH ANCHOR SCROLL
-  ───────────────────────────────────────────────────────── */
+  /* ────────────────────────────────────────────────────
+     10. SMOOTH ANCHOR SCROLL
+  ─────────────────────────────────────────────────── */
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var target = document.querySelector(a.getAttribute('href'));
       if (!target) return;
       e.preventDefault();
       var top = target.getBoundingClientRect().top + scrollY - (nav ? nav.offsetHeight : 68) - 16;
-      window.scrollTo({ top: top, behavior: 'smooth' });
+      if (lenis) lenis.scrollTo(top, { duration: 1.6, easing: function(t){ return 1 - Math.pow(1-t,4); } });
+      else window.scrollTo({ top: top, behavior: 'smooth' });
     });
   });
 
