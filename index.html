@@ -207,7 +207,7 @@
     }
     .hero__hl .hw {
       display:inline-block;
-      opacity:0; transform:translateY(38px); filter:blur(14px);
+      opacity:0; transform:translateY(38px);
     }
     .hero__hl .hw--block { display:block; }
     .hero__dash {
@@ -290,12 +290,12 @@
     ══════════════════════════════════════════════════ */
     .rv {
       opacity:0;
-      transform:translateY(36px);
-      filter:blur(14px);
-      will-change:opacity,transform,filter;
+      transform:translateY(28px);
+      /* No filter:blur — animating blur on many elements simultaneously tanks scroll perf */
+      will-change:opacity,transform;
     }
-    .rv.in { animation:reveal-in .9s cubic-bezier(.22,1,.36,1) forwards; }
-    @keyframes reveal-in { to { opacity:1; transform:translateY(0); filter:blur(0); } }
+    .rv.in { animation:reveal-in .85s cubic-bezier(.22,1,.36,1) forwards; }
+    @keyframes reveal-in { to { opacity:1; transform:translateY(0); } }
     .d1{animation-delay:.08s} .d2{animation-delay:.17s} .d3{animation-delay:.26s}
     .d4{animation-delay:.35s} .d5{animation-delay:.44s}
 
@@ -351,10 +351,9 @@
     .svc {
       padding:36px 32px;
       border-radius:var(--r-md);
-      background:var(--card); border:1px solid var(--border);
-      backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
+      /* backdrop-filter removed — conflicts with transform-style:preserve-3d, kills GPU perf */
+      background:rgba(12,12,28,0.85); border:1px solid var(--border);
       position:relative; overflow:hidden; cursor:default;
-      /* 3D tilt base */
       transform-style:preserve-3d;
       transition:border-color .4s, box-shadow .4s, transform .7s cubic-bezier(.23,1,.32,1);
       --mx:50%; --my:50%;
@@ -834,21 +833,20 @@
   /* ────────────────────────────────────────────────────
      1. LENIS SMOOTH SCROLL + GSAP INTEGRATION
   ─────────────────────────────────────────────────── */
+  /* Lenis runs via GSAP ticker only — one loop, not two */
   var lenis;
-  if (typeof Lenis !== 'undefined') {
+  if (typeof Lenis !== 'undefined' && typeof gsap !== 'undefined') {
     lenis = new Lenis({
-      duration:     1.35,
-      easing:       function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
-      smoothWheel:  true,
-      wheelMultiplier: 0.9
+      duration:        1.25,
+      easing:          function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+      smoothWheel:     true,
+      wheelMultiplier: 0.85
     });
-    function rafLenis(time) { lenis.raf(time); requestAnimationFrame(rafLenis); }
-    requestAnimationFrame(rafLenis);
     if (typeof ScrollTrigger !== 'undefined') {
       lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
-      gsap.ticker.lagSmoothing(0);
     }
+    gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
   }
 
   /* ────────────────────────────────────────────────────
@@ -874,9 +872,9 @@
     camera.position.set(0, 6.5, 11);
     camera.lookAt(0, -1.5, 0);
 
-    /* Topographic grid */
-    var gridGeo = new THREE.PlaneGeometry(34, 26, 64, 48);
-    var gridMat = new THREE.MeshBasicMaterial({ color: 0x38BDF8, wireframe: true, transparent: true, opacity: 0.055 });
+    /* Topographic grid — 33×25 = 825 vertices (was 3185, 74% fewer JS ops/frame) */
+    var gridGeo = new THREE.PlaneGeometry(34, 26, 32, 24);
+    var gridMat = new THREE.MeshBasicMaterial({ color: 0x38BDF8, wireframe: true, transparent: true, opacity: 0.058 });
     var gridMesh = new THREE.Mesh(gridGeo, gridMat);
     gridMesh.rotation.x = -Math.PI / 2.08;
     gridMesh.position.y = -3.5;
@@ -905,21 +903,27 @@
       tRX = (e.clientY / window.innerHeight - 0.5) * -0.06;
     }, { passive: true });
 
-    /* Animation loop */
-    var rafId, pos = gridGeo.attributes.position, t0 = performance.now();
+    /* Animation loop — vertex update throttled to every 2 frames */
+    var rafId, frame = 0;
+    var pos = gridGeo.attributes.position, posArr = pos.array;
+    var t0 = performance.now();
+
     function tick() {
       rafId = requestAnimationFrame(tick);
+      frame++;
       var t = (performance.now() - t0) * 0.001;
 
-      /* Undulate grid vertices */
-      for (var i = 0; i < pos.count; i++) {
-        var x = pos.getX(i), y = pos.getY(i);
-        var z = Math.sin(x*.32+t*.38)*Math.cos(y*.26+t*.28)*.72
-              + Math.sin(x*.68+t*.60)*Math.sin(y*.52+t*.50)*.32
-              + Math.sin((x-y)*.42+t*.22)*.18;
-        pos.setZ(i, z);
+      /* Undulate vertices every other frame — halves JS cost, imperceptible visually */
+      if (frame % 2 === 0) {
+        for (var i = 0; i < pos.count; i++) {
+          var x = posArr[i * 3], y = posArr[i * 3 + 1];
+          posArr[i * 3 + 2] =
+            Math.sin(x*.32+t*.38)*Math.cos(y*.26+t*.28)*.72
+          + Math.sin(x*.68+t*.60)*Math.sin(y*.52+t*.50)*.32
+          + Math.sin((x-y)*.42+t*.22)*.18;
+        }
+        pos.needsUpdate = true;
       }
-      pos.needsUpdate = true;
 
       isoLines.rotation.y += 0.0038; isoLines.rotation.x += 0.0014; isoLines.rotation.z += 0.0008;
       octLines.rotation.y -= 0.0025; octLines.rotation.z += 0.0018;
@@ -968,11 +972,10 @@
     var words = document.querySelectorAll('.hero__hl .hw');
     words.forEach(function (el, i) {
       setTimeout(function () {
-        el.style.transition = 'opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1), filter .85s cubic-bezier(.22,1,.36,1)';
+        el.style.transition = 'opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1)';
         el.style.opacity = '1';
         el.style.transform = 'translateY(0)';
-        el.style.filter = 'blur(0)';
-      }, 900 + i * 120); /* offset after curtain finishes */
+      }, 900 + i * 120);
     });
   }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(revealHeadline);
@@ -1066,11 +1069,7 @@
       });
     });
 
-    /* Parallax on hero orbs */
-    gsap.to('.hero__atm::before', {
-      yPercent: -20, ease: 'none',
-      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 2 }
-    });
+    /* (hero orb parallax removed — GSAP can't target ::before pseudo-elements) */
   });
 
   /* ────────────────────────────────────────────────────
