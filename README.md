@@ -1,11 +1,9 @@
 # Sichon Engineering Company — Website
 
-Redesign of the company site: a scroll-driven story where an engineer's drawing
-builds itself from the dark "infrastructure gap" into a lit, green nation —
-**"Build the Nation · Jenga Taifa."** Sells taste and standard, not just services.
-
-> Branch: `redesign` · Live site (`www.sichonengineering.com`) is still the old
-> page and stays untouched until this is merged to `main`.
+The official website for Sichon Engineering Company. A scroll-driven story where
+an engineer's drawing builds itself from the dark "infrastructure gap" into a lit,
+green nation — **"Build the Nation · Jenga Taifa."** Sells taste and standard, not
+just services.
 
 ## Stack
 Vite · React · TypeScript · CSS Modules + design tokens · `motion` (Framer Motion).
