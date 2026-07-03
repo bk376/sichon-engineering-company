@@ -73,7 +73,8 @@ a.channel:hover .channelValue { color: var(--accent); }
   border-top: 1px solid var(--line-on-dark);
 }
 .brandCol { display: flex; flex-direction: column; gap: 0.75rem; }
-.brandNote { color: var(--on-dark-2); font-size: 0.9rem; }
+.brandNote { color: var(--on-dark-2); font-size: 0.9rem; display: flex; flex-direction: column; gap: 0.15rem; }
+.taifa { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; color: var(--accent); }
 
 .footNav { display: flex; gap: 1.75rem; flex-wrap: wrap; }
 .footNav a {

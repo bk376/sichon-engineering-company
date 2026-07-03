@@ -55,4 +55,15 @@
 
   /* ── Motion ── */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ── Narrative "the gap" night palette ── */
+  --night:    #0a0b11;   /* deepest — the unbuilt gap */
+  --night-2:  #10121b;
+  --dusk:     #1a1d29;   /* transition */
+  --steel:    #6b7a90;   /* draft linework on dark */
+  --draft:    rgba(210, 222, 240, 0.55);   /* blueprint stroke */
+  --draft-2:  rgba(210, 222, 240, 0.22);
+  --glow:     #ffd7a0;   /* lights coming on */
+  --solar:    #4ea3d9;   /* photovoltaic blue */
+  --leaf:     #6fae5a;   /* environment green */
 }

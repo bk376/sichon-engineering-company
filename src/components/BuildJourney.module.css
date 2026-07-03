@@ -1,0 +1,128 @@
+.track {
+  position: relative;
+  background: var(--night);
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image:
+    linear-gradient(rgba(210, 222, 240, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(210, 222, 240, 0.4) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(120% 100% at 50% 50%, #000 40%, transparent 85%);
+  pointer-events: none;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
+
+.captions {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.caption {
+  position: absolute;
+  bottom: 11svh;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  max-width: var(--maxw);
+  padding-inline: var(--gutter);
+}
+
+.coord {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 1.25rem;
+}
+.step {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3rem, 1.6rem + 6vw, 6.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+}
+.headline2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 1.4rem + 3.4vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+.finale {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-style: italic;
+  font-size: clamp(2.8rem, 1.6rem + 5.4vw, 6rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  color: var(--accent-deep);
+  margin-bottom: 1.25rem;
+}
+
+.sub {
+  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.25rem);
+  line-height: 1.55;
+  opacity: 0.82;
+  max-width: 44ch;
+}
+
+.scrollHint {
+  display: inline-block;
+  margin-top: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  animation: bob 2.4s var(--ease) infinite;
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+@media (max-width: 720px) {
+  .caption { bottom: 8svh; }
+  .sub { max-width: 90%; }
+}

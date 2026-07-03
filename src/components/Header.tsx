@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Logo from './Logo'
-import { nav, company } from '../data/content'
+import { nav } from '../data/content'
 import styles from './Header.module.css'
 
 export default function Header() {
@@ -29,8 +29,8 @@ export default function Header() {
           ))}
         </nav>
 
-        <a href={`mailto:${company.email}`} className={styles.cta}>
-          Start a project
+        <a href="#brief" className={styles.cta}>
+          Start a brief
         </a>
 
         <button
@@ -50,8 +50,8 @@ export default function Header() {
               {n.label}
             </a>
           ))}
-          <a href={`mailto:${company.email}`} className={styles.mobileCta} onClick={() => setOpen(false)}>
-            Start a project
+          <a href="#brief" className={styles.mobileCta} onClick={() => setOpen(false)}>
+            Start a brief
           </a>
         </nav>
       )}

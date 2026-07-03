@@ -37,7 +37,10 @@ export default function Contact() {
         <div className={styles.bottom}>
           <div className={styles.brandCol}>
             <Logo tone="paper" />
-            <p className={styles.brandNote}>{company.name} — {company.tagline}.</p>
+            <p className={styles.brandNote}>
+              {company.name}
+              <span className={styles.taifa}>{company.tagline} · {company.taglineSw}</span>
+            </p>
           </div>
 
           <nav className={styles.footNav} aria-label="Footer">

@@ -8,19 +8,86 @@ export const company = {
   name: 'Sichon Engineering Company',
   short: 'Sichon',
   tagline: 'Build the Nation',
+  taglineSw: 'Jenga Taifa',
   location: 'Nairobi, Kenya',
+  coords: '01°17′S · 36°49′E',
   founded: '2026',
   email: 'croptoo@gmail.com',
   phone: '+254 718 223 111',
   phoneHref: '+254718223111',
 } as const
 
+/**
+ * The infrastructure gap, in real, cited figures — the "before photo".
+ * Each maps to a Sichon service. Sources current as of July 2026.
+ */
+export type GapStat = {
+  figure: string
+  label: string
+  detail: string
+  source: string
+  answer: string
+}
+
+export const gap: GapStat[] = [
+  {
+    figure: '84.9%',
+    label: 'of Kenya’s roads are unpaved',
+    detail: '140,099 of 164,967 km remain earth or gravel. County roads are just 2.5% paved.',
+    source: 'KNBS Economic Survey 2024',
+    answer: 'Roads & Access Infrastructure',
+  },
+  {
+    figure: '1 in 4',
+    label: 'Kenyans live without electricity',
+    detail: '76% had power by 2023, up from 37% a decade earlier. The last mile is the hardest.',
+    source: 'World Bank · Our World in Data',
+    answer: 'Clean Energy · Solar',
+  },
+  {
+    figure: '2M+',
+    label: 'housing units short — and growing',
+    detail: 'A national deficit widening by roughly 200,000 homes every single year.',
+    source: 'UN-Habitat · Vision 2030',
+    answer: 'Built Environment',
+  },
+  {
+    figure: '46.5%',
+    label: 'of urban Kenyans live in informal settlements',
+    detail: 'More than twice the global average — a call for drainage, walls, and dignified public space.',
+    source: 'UN-Habitat',
+    answer: 'Drainage & Public Space',
+  },
+]
+
+export const manifesto = {
+  eyebrow: 'Our Standard · Est. 2026',
+  heading: 'We are new. That is the point.',
+  body: [
+    'Sichon Engineering was founded in 2026. We will not pretend to a portfolio we have not yet earned — because integrity is not a marketing line for us, it is the first thing we build.',
+    'What we offer today is a standard: disciplined process, transparent budgeting, honest documentation, and safety that is never negotiated. We are open for briefs, and we intend to earn every project on performance.',
+  ],
+  promise: [
+    'Transparent budgeting & documentation',
+    'Safety without compromise',
+    'Exactly what we promise — delivered',
+  ],
+}
+
+export const brief = {
+  // To enable inline submission, create a free key at https://web3forms.com
+  // (bound to the email below) and paste it here. Until then, the form
+  // gracefully falls back to composing an email to the address above.
+  web3formsKey: 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY',
+  focusOptions: ['Built Environment', 'Clean Energy', 'Environmental Sustainability', 'Consulting', 'Not sure yet'],
+}
+
 export const nav = [
-  { label: 'Mission', href: '#mission' },
+  { label: 'The Gap', href: '#gap' },
+  { label: 'Standard', href: '#standard' },
   { label: 'Services', href: '#services' },
   { label: 'Values', href: '#values' },
   { label: 'Process', href: '#process' },
-  { label: 'Contact', href: '#contact' },
 ] as const
 
 export const hero = {
