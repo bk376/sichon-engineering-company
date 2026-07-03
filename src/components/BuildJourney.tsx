@@ -64,7 +64,7 @@ export default function BuildJourney() {
         </svg>
 
         <motion.div className={styles.captions} style={{ color: captionColor }}>
-          <Caption p={p} range={[0.0, 0.03, 0.1, 0.15]}>
+          <Caption p={p} range={[0.0, 0.03, 0.1, 0.15]} entry={false}>
             <span className={styles.coord}>01°17′S · 36°49′E — NAIROBI, KENYA</span>
             <h1 className={styles.headline}>There is a gap.</h1>
             <p className={styles.sub}>
@@ -115,15 +115,22 @@ export default function BuildJourney() {
 function Caption({
   p,
   range,
+  entry = true,
   children,
 }: {
   p: MotionValue<number>
   range: [number, number, number, number]
+  /** When false, the caption is visible on load and only fades out. */
+  entry?: boolean
   children: React.ReactNode
 }) {
   const [a, b, c, d] = range
-  const opacity = useTransform(p, [a, b, c, d], [0, 1, 1, d === 1 ? 1 : 0])
-  const y = useTransform(p, [a, b], [26, 0])
+  const opacity = useTransform(
+    p,
+    entry ? [a, b, c, d] : [a, c, d],
+    entry ? [0, 1, 1, d === 1 ? 1 : 0] : [1, 1, 0],
+  )
+  const y = useTransform(p, [a, b], [entry ? 26 : 0, 0])
   return (
     <motion.div className={styles.caption} style={{ opacity, y }}>
       {children}
