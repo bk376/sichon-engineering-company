@@ -1,0 +1,58 @@
+/* ═══════════════════════════════════════════════════════════
+   SICHON ENGINEERING — DESIGN TOKENS
+   Grounded & architectural: paper, ink, one structural accent.
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  /* ── Surfaces ── */
+  --paper:    #f5f4ef;   /* warm off-white base */
+  --paper-2:  #efeee6;   /* panel / alt band */
+  --paper-3:  #e8e6db;   /* deeper panel, hairline fills */
+  --ink-band: #16150f;   /* dark contrast band (footer / feature) */
+
+  /* ── Ink (text) ── */
+  --ink:   #16150f;      /* near-black, warm */
+  --ink-2: #4a473e;      /* secondary text */
+  --ink-3: #86837a;      /* muted / captions */
+
+  /* ── Lines ── */
+  --line:   rgba(22, 21, 15, 0.14);
+  --line-2: rgba(22, 21, 15, 0.07);
+  --line-on-dark: rgba(245, 244, 239, 0.16);
+
+  /* ── Accent (structural amber/terracotta — from the brief) ── */
+  --accent:      #e8843c;
+  --accent-deep: #c6641f;
+  --accent-soft: rgba(232, 132, 60, 0.12);
+
+  /* ── Secondary (blueprint blue) ── */
+  --blue:      #3b5b7a;
+  --blue-soft: rgba(59, 91, 122, 0.10);
+
+  /* On-dark text (used inside ink bands) */
+  --on-dark:   #f5f4ef;
+  --on-dark-2: rgba(245, 244, 239, 0.62);
+  --on-dark-3: rgba(245, 244, 239, 0.38);
+
+  /* ── Type families ── */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ── Fluid type scale ── */
+  --fs-hero:  clamp(2.9rem, 1.4rem + 6.4vw, 7rem);
+  --fs-h2:    clamp(2rem, 1.2rem + 3.2vw, 3.6rem);
+  --fs-h3:    clamp(1.35rem, 1.05rem + 1.2vw, 1.9rem);
+  --fs-lead:  clamp(1.1rem, 1rem + 0.6vw, 1.4rem);
+  --fs-body:  1.0625rem;
+  --fs-sm:    0.9375rem;
+  --fs-mono:  0.75rem;      /* technical labels */
+
+  /* ── Layout ── */
+  --maxw: 1240px;
+  --gutter: clamp(1.25rem, 5vw, 5rem);
+  --radius: 4px;      /* architectural: minimal rounding */
+  --radius-lg: 8px;
+
+  /* ── Motion ── */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
