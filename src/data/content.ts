@@ -60,6 +60,39 @@ export const gap: GapStat[] = [
   },
 ]
 
+/**
+ * Selling the life, not the concrete. Taste as the product — a promise a
+ * new firm can make from day one, before a single project is built.
+ */
+export const aspiration = {
+  eyebrow: 'A matter of taste',
+  heading: 'We don’t sell concrete. We sell the life it makes possible.',
+  lede: 'Infrastructure is not the product. The product is the morning it makes ordinary — a lit road, a dry crossing, a powered home, a green square. Taste is not a luxury we add at the end. It is respect, made physical.',
+  scenes: [
+    {
+      moment: 'The school run',
+      line: 'A child crosses a lit, paved road in the rain — and arrives dry.',
+      tag: 'Roads · Drainage',
+    },
+    {
+      moment: 'The evening',
+      line: 'A home glows on power it gathered from its own roof at noon.',
+      tag: 'Clean Energy',
+    },
+    {
+      moment: 'The commons',
+      line: 'A green square where a neighbourhood remembers how to gather.',
+      tag: 'Public Space · Trees',
+    },
+    {
+      moment: 'The line',
+      line: 'A wall holds the hillside — and looks like it always meant to.',
+      tag: 'Retaining Walls',
+    },
+  ],
+  close: 'A firm is not measured only by what it has built, but by the standard it refuses to lower. Ours is set on day one.',
+}
+
 export const manifesto = {
   eyebrow: 'Our Standard · Est. 2026',
   heading: 'We are new. That is the point.',
@@ -84,10 +117,10 @@ export const brief = {
 
 export const nav = [
   { label: 'The Gap', href: '#gap' },
+  { label: 'The Life', href: '#taste' },
   { label: 'Standard', href: '#standard' },
   { label: 'Services', href: '#services' },
   { label: 'Values', href: '#values' },
-  { label: 'Process', href: '#process' },
 ] as const
 
 export const hero = {

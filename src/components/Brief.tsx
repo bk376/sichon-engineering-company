@@ -14,6 +14,13 @@ export default function Brief() {
     e.preventDefault()
     const form = e.currentTarget
     const data = new FormData(form)
+
+    // Honeypot: bots fill hidden fields; humans never see it.
+    if (String(data.get('website') || '')) {
+      setStatus('success')
+      return
+    }
+
     const name = String(data.get('name') || '')
     const org = String(data.get('org') || '')
     const focus = String(data.get('focus') || '')
@@ -92,6 +99,15 @@ export default function Brief() {
               </div>
             ) : (
               <form className={styles.form} onSubmit={onSubmit}>
+                {/* honeypot — hidden from humans */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+                />
                 <div className={styles.field}>
                   <label htmlFor="name">Your name</label>
                   <input id="name" name="name" type="text" required autoComplete="name" />

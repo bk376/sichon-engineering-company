@@ -1,6 +1,7 @@
 import Header from './components/Header'
 import BuildJourney from './components/BuildJourney'
 import Gap from './components/Gap'
+import Aspiration from './components/Aspiration'
 import Manifesto from './components/Manifesto'
 import Services from './components/Services'
 import Values from './components/Values'
@@ -15,6 +16,7 @@ export default function App() {
       <main>
         <BuildJourney />
         <Gap />
+        <Aspiration />
         <Manifesto />
         <Services />
         <Values />

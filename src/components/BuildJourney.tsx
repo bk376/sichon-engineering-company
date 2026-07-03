@@ -29,12 +29,14 @@ export default function BuildJourney() {
   const staticProgress = useMotionValue(1)
   const p = reduced ? staticProgress : scrollYProgress
 
+  // A cinematic sunrise, not a flat grey: night → deep blue → pre-dawn indigo
+  // → dawn mauve → warm sand → morning light → paper.
   const bg = useTransform(
     p,
-    [0, 0.42, 0.68, 0.9],
-    ['#0a0b11', '#14161f', '#c9c6bb', '#f5f4ef'],
+    [0, 0.34, 0.5, 0.6, 0.72, 0.85, 0.95],
+    ['#0a0b11', '#101423', '#241f33', '#5a4f5a', '#b8a99a', '#e7e1d5', '#f5f4ef'],
   )
-  const captionColor = useTransform(p, [0, 0.72, 0.86], ['#f5f4ef', '#f5f4ef', '#16150f'])
+  const captionColor = useTransform(p, [0, 0.68, 0.82], ['#f5f4ef', '#f5f4ef', '#16150f'])
   const gridOpacity = useTransform(p, [0, 0.1, 0.7, 0.9], [0.16, 0.16, 0.08, 0])
 
   return (
@@ -279,10 +281,10 @@ function Trees({ p }: { p: MotionValue<number> }) {
   const opacity = useTransform(p, [0.66, 0.74], [0, 1])
   const scale = useTransform(p, [0.66, 0.8], [0, 1])
   const trees = [
-    { x: 610, s: 1 },
-    { x: 830, s: 1.25 },
-    { x: 300, s: 0.85 },
-    { x: 1330, s: 1.1 },
+    { x: 470, s: 1 },
+    { x: 980, s: 1.15 },
+    { x: 250, s: 0.85 },
+    { x: 1360, s: 1.1 },
   ]
   return (
     <motion.g style={{ opacity }} stroke="var(--leaf)" strokeWidth="1.4" fill="var(--leaf)" fillOpacity="0.12">
