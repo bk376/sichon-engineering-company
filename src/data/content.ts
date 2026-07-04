@@ -122,7 +122,7 @@ export const nav = [
   { label: 'The Life', href: '#taste' },
   { label: 'Services', href: '#services' },
   { label: 'Tools', href: '#tools' },
-  { label: 'Values', href: '#values' },
+  { label: 'Pricing', href: '#desk' },
 ] as const
 
 export const hero = {

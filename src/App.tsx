@@ -5,6 +5,7 @@ import Aspiration from './components/Aspiration'
 import Manifesto from './components/Manifesto'
 import Services from './components/Services'
 import SolarTool from './components/SolarTool'
+import Desk from './components/Desk'
 import Values from './components/Values'
 import Process from './components/Process'
 import Pulse from './components/Pulse'
@@ -23,6 +24,7 @@ export default function App() {
         <Manifesto />
         <Services />
         <SolarTool />
+        <Desk />
         <Values />
         <Process />
         <Pulse />

@@ -151,7 +151,9 @@ export default function SolarTool() {
                 )}
 
                 <div className={styles.plateActions}>
-                  <a href="#brief" className={styles.cta}>Turn this into a stamped design →</a>
+                  <a href="#desk" className={styles.cta}>
+                    Turn this into a stamped design — KSh 15,000 →
+                  </a>
                   <span className={styles.disclaimer}>{STAMP_RULE}</span>
                 </div>
               </div>
