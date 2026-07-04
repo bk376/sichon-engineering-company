@@ -15,6 +15,8 @@ export const company = {
   email: 'croptoo@gmail.com',
   phone: '+254 718 223 111',
   phoneHref: '+254718223111',
+  whatsapp: '254718223111',
+  whatsappMsg: 'Hello Sichon — I have a project in mind.',
 } as const
 
 /**

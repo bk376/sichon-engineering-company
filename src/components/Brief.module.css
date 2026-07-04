@@ -28,6 +28,11 @@
 }
 .direct a { color: var(--ink); border-bottom: 1px solid var(--line); width: fit-content; padding-bottom: 2px; transition: color 0.2s var(--ease); }
 .direct a:hover { color: var(--accent-deep); }
+.whatsapp { color: #1a8a5a !important; border-bottom-color: rgba(26, 138, 90, 0.35) !important; }
+.whatsapp:hover { color: #12703f !important; }
+
+.submitRow { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; margin-top: 0.5rem; }
+.reassure { font-size: 0.85rem; color: var(--ink-3); }
 
 /* ── Form ── */
 .form { display: flex; flex-direction: column; gap: 1.4rem; }
@@ -67,8 +72,6 @@
 .field textarea { resize: vertical; min-height: 120px; }
 
 .submit {
-  align-self: flex-start;
-  margin-top: 0.5rem;
   background: var(--ink);
   color: var(--paper);
   font-weight: 600;

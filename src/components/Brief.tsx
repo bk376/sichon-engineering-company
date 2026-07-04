@@ -22,6 +22,7 @@ export default function Brief() {
     }
 
     const name = String(data.get('name') || '')
+    const contact = String(data.get('contact') || '')
     const org = String(data.get('org') || '')
     const focus = String(data.get('focus') || '')
     const location = String(data.get('location') || '')
@@ -31,7 +32,7 @@ export default function Brief() {
     if (!KEY_SET) {
       const subject = encodeURIComponent(`Project brief — ${name || 'New enquiry'}`)
       const body = encodeURIComponent(
-        `Name: ${name}\nOrganisation: ${org}\nFocus: ${focus}\nLocation: ${location}\n\n${message}`,
+        `Name: ${name}\nContact: ${contact}\nOrganisation: ${org}\nFocus: ${focus}\nLocation: ${location}\n\n${message}`,
       )
       window.location.href = `mailto:${company.email}?subject=${subject}&body=${body}`
       setStatus('success')
@@ -47,7 +48,8 @@ export default function Brief() {
           access_key: brief.web3formsKey,
           subject: `Project brief — ${name}`,
           from_name: 'Sichon website',
-          name, org, focus, location, message,
+          replyto: contact,
+          name, contact, org, focus, location, message,
         }),
       })
       if (res.ok) {
@@ -82,6 +84,14 @@ export default function Brief() {
               <div className={styles.direct}>
                 <a href={`mailto:${company.email}`}>{company.email}</a>
                 <a href={`tel:${company.phoneHref}`}>{company.phone}</a>
+                <a
+                  className={styles.whatsapp}
+                  href={`https://wa.me/${company.whatsapp}?text=${encodeURIComponent(company.whatsappMsg)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Chat on WhatsApp →
+                </a>
               </div>
             </Reveal>
           </div>
@@ -108,9 +118,15 @@ export default function Brief() {
                   aria-hidden="true"
                   style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
                 />
-                <div className={styles.field}>
-                  <label htmlFor="name">Your name</label>
-                  <input id="name" name="name" type="text" required autoComplete="name" />
+                <div className={styles.row2}>
+                  <div className={styles.field}>
+                    <label htmlFor="name">Your name</label>
+                    <input id="name" name="name" type="text" required autoComplete="name" />
+                  </div>
+                  <div className={styles.field}>
+                    <label htmlFor="contact">How we reach you</label>
+                    <input id="contact" name="contact" type="text" required autoComplete="email" placeholder="Email or phone" />
+                  </div>
                 </div>
                 <div className={styles.field}>
                   <label htmlFor="org">Organisation <span>(optional)</span></label>
@@ -140,9 +156,12 @@ export default function Brief() {
                   <p className={styles.err}>Something went wrong. Please email us directly at {company.email}.</p>
                 )}
 
-                <button className={styles.submit} type="submit" disabled={status === 'submitting'}>
-                  {status === 'submitting' ? 'Sending…' : 'Send brief'} <span aria-hidden="true">→</span>
-                </button>
+                <div className={styles.submitRow}>
+                  <button className={styles.submit} type="submit" disabled={status === 'submitting'}>
+                    {status === 'submitting' ? 'Sending…' : 'Send brief'} <span aria-hidden="true">→</span>
+                  </button>
+                  <span className={styles.reassure}>We reply to every brief within 48 hours.</span>
+                </div>
               </form>
             )}
           </Reveal>

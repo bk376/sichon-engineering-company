@@ -8,6 +8,7 @@ import Values from './components/Values'
 import Process from './components/Process'
 import Brief from './components/Brief'
 import Contact from './components/Contact'
+import MobileCTA from './components/MobileCTA'
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Brief />
       </main>
       <Contact />
+      <MobileCTA />
     </>
   )
 }

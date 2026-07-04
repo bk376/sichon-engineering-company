@@ -101,3 +101,8 @@ a.channel:hover .channelValue { color: var(--accent); }
   .channels { grid-template-columns: 1fr; width: 100%; }
   .bottom { flex-direction: column; align-items: flex-start; }
 }
+
+/* clearance for the sticky mobile CTA bar */
+@media (max-width: 860px) {
+  .legal { padding-bottom: 96px; }
+}
