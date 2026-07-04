@@ -122,11 +122,16 @@ tool proves demand.
 ## The sequence I'd actually follow
 
 - **Phase 0 (done):** website + lead capture.
-- **Phase 1 — Solar MVP.** One tool, end to end: address + roof size + monthly bill
-  → a real solar proposal PDF. Why solar first: clearest *demand* (everyone wants
-  cheaper power), cleanest *data* (pvlib + PVGIS just work for Kenya), fastest path
-  to a *paid deliverable* and *proof*. Ship it as a free estimate on the site,
-  charge for the stamped design.
+- **Phase 1 — Solar MVP. ✅ SHIPPED 2026-07-04 (client-side v1).** Live on the site
+  as "Tools · 01 — Solar" (`src/data/solar.ts` physics + `SolarTool.tsx` UI):
+  county PVOUT table (GSA-derived), KPLC all-in tariffs, real Kenyan install
+  costs, panel-quantized sizing, roof capping, **self-consumption 65% because net
+  metering isn't operational in Kenya** (the honesty differentiator — competitors
+  flatter this number). Runs entirely in the browser — zero backend, zero hosting
+  risk, works on GitHub Pages forever. *Pattern established: physics in the
+  browser until a backend earns itself.* Next iterations: PDF proposal export,
+  Open-Meteo live irradiance refinement, battery/hybrid option, county→lat-lng
+  map picker. The *paid* stamped-design SKU is the business step that follows.
 - **Phase 2 — Site Intelligence core + Drainage.** The shared foundation makes
   every later tool cheap; drainage attacks an urgent, visible Kenyan pain (floods).
 - **Phase 3 — Roads/earthworks + retaining walls** (the built-environment suite).

@@ -100,7 +100,11 @@ npm run preview   # serve the build
       `web3formsKey` in `src/data/content.ts` → inline form submission.
 - [ ] **One real testimonial / first-client quote** — last thing blocking a 9.5 site.
 - [ ] Optional: analytics + form-submit event (Plausible/Umami) to measure conversion.
-- [ ] Layer 2: begin `docs/ROADMAP.md` Phase 1 (Solar tool).
+- [x] Layer 2 Phase 1: **Solar estimator SHIPPED** (2026-07-04) — "Tools · 01" on
+      the site, client-side Kenya-calibrated physics (`src/data/solar.ts` +
+      `SolarTool.tsx`). The "computational tools" claim is now true.
+- [ ] Layer 2 next: PDF proposal export for the solar tool; then Site-Intelligence
+      core / drainage (see ROADMAP).
 
 ## 6. Honest rating (Layer 1): **9.0 / 10**
 Concept 9.5 · craft 9 · substance 8.5 · place identity 8.5 · UX/conversion 9 ·

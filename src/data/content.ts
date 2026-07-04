@@ -120,8 +120,8 @@ export const brief = {
 export const nav = [
   { label: 'The Gap', href: '#gap' },
   { label: 'The Life', href: '#taste' },
-  { label: 'Standard', href: '#standard' },
   { label: 'Services', href: '#services' },
+  { label: 'Tools', href: '#tools' },
   { label: 'Values', href: '#values' },
 ] as const
 
