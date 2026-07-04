@@ -62,13 +62,14 @@ export const skus: Sku[] = [
     name: 'Drainage & flood assessment',
     priceKsh: 45_000,
     turnaround: '7 days',
+    from: 'Starts from your free snapshot above',
     includes: [
       'Catchment delineation from elevation data',
       'Runoff estimation & culvert/drain sizing',
       'Flood-risk mapping for your parcel',
       'Mitigation options, costed',
+      'Reviewed by a licensed engineer',
     ],
-    waitlist: true,
   },
   {
     id: 'WALL-PRELIM',

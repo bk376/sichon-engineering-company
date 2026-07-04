@@ -73,6 +73,13 @@ export const registry: Instrument[] = [
     autonomy: 'publish', // L2: computes + publishes estimates on its own
     outputClass: 'PRELIM',
   },
+  {
+    id: 'drainage-02',
+    name: 'Drainage & flood snapshot',
+    version: '1.0.0',
+    autonomy: 'publish',
+    outputClass: 'PRELIM',
+  },
 ]
 
 /* ── Governance language (single source — instruments render these) ── */

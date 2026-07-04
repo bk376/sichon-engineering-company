@@ -4,7 +4,7 @@ import Gap from './components/Gap'
 import Aspiration from './components/Aspiration'
 import Manifesto from './components/Manifesto'
 import Services from './components/Services'
-import SolarTool from './components/SolarTool'
+import ToolsHub from './components/ToolsHub'
 import Desk from './components/Desk'
 import Values from './components/Values'
 import Process from './components/Process'
@@ -23,7 +23,7 @@ export default function App() {
         <Aspiration />
         <Manifesto />
         <Services />
-        <SolarTool />
+        <ToolsHub />
         <Desk />
         <Values />
         <Process />

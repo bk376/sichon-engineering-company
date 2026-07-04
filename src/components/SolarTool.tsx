@@ -10,12 +10,11 @@ const SELF = registry.find((i) => i.id === 'solar-01')!
 type Mode = 'bill' | 'kwh'
 
 /**
- * Tools · 01 — Solar estimator. Real Kenya-calibrated physics running
- * client-side (GSA yields, KPLC tariffs, local install costs). The first
- * working instrument of the Sichon engineering desk: the site stops
- * describing computational engineering and starts doing it.
+ * Tool 01 — Solar estimator body (rendered inside ToolsHub).
+ * Real Kenya-calibrated physics running client-side: GSA yields,
+ * KPLC tariffs, local install costs.
  */
-export default function SolarTool() {
+export default function SolarBody() {
   const [countyId, setCountyId] = useState('nairobi')
   const [mode, setMode] = useState<Mode>('bill')
   const [amount, setAmount] = useState('')
@@ -33,26 +32,7 @@ export default function SolarTool() {
   }, [countyId, mode, amount, roof])
 
   return (
-    <section className={`section ${styles.tool}`} id="tools">
-      <div className="container">
-        <div className={styles.head}>
-          <Reveal>
-            <p className="eyebrow">Tools · 01 — Solar</p>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="section-title">Run the numbers yourself.</h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="lead">
-              Our first public instrument: a solar estimate computed with the same
-              engineering data we design with — Global Solar Atlas yields for your
-              county, current KPLC tariffs, real Kenyan install costs. No email
-              required. Honest numbers, then your call.
-            </p>
-          </Reveal>
-        </div>
-
-        <div className={styles.grid}>
+    <div className={styles.grid}>
           {/* ── Inputs ── */}
           <Reveal className={styles.inputs}>
             <div className={styles.field}>
@@ -167,8 +147,6 @@ export default function SolarTool() {
               </div>
             )}
           </Reveal>
-        </div>
-      </div>
-    </section>
+    </div>
   )
 }

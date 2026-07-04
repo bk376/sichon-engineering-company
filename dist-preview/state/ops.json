@@ -6,9 +6,10 @@
   "status": "nominal",
   "latencyMs": null,
   "keys": 2,
-  "instrumentsOnline": 1,
-  "focus": "Tool 02 — drainage & flood snapshot",
+  "instrumentsOnline": 2,
+  "focus": "First commission · Tool 03 — retaining wall designer",
   "changelog": [
+    { "date": "2026-07-04", "entry": "Tools 02 — Drainage & flood snapshot online; FLOOD-CHECK SKU opens; the Desk starts selling worldwide" },
     { "date": "2026-07-04", "entry": "SICHON-OS v1 adopted: authority kernel, heartbeat, self-critique organ, the Two Keys" },
     { "date": "2026-07-04", "entry": "Tools 01 — Solar estimator shipped (Kenya-calibrated, client-side)" },
     { "date": "2026-07-03", "entry": "Jenga Taifa scroll narrative, taste positioning, conversion funnel" }

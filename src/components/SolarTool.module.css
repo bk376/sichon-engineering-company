@@ -20,6 +20,8 @@
 
 /* ── Inputs ── */
 .inputs { display: flex; flex-direction: column; gap: 1.4rem; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+@media (max-width: 480px) { .row2 { grid-template-columns: 1fr; } }
 
 .field { display: flex; flex-direction: column; gap: 0.5rem; }
 .field label {
