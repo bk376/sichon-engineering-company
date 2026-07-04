@@ -7,6 +7,7 @@ import Services from './components/Services'
 import SolarTool from './components/SolarTool'
 import Values from './components/Values'
 import Process from './components/Process'
+import Pulse from './components/Pulse'
 import Brief from './components/Brief'
 import Contact from './components/Contact'
 import MobileCTA from './components/MobileCTA'
@@ -24,6 +25,7 @@ export default function App() {
         <SolarTool />
         <Values />
         <Process />
+        <Pulse />
         <Brief />
       </main>
       <Contact />

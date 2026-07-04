@@ -1,0 +1,68 @@
+# SICHON-OS · HEART — the entity's daily pulse.
+# Checks its own body, records vitals, and files self-critiques
+# against itself when something is wrong. Every act is a commit (§8.3).
+# NOTE: scheduled workflows run from the default branch — the heart
+# starts beating at go-live (merge to main).
+name: Heartbeat
+
+on:
+  schedule:
+    - cron: '17 3 * * *' # daily, 06:17 Nairobi
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  pulse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the body
+        id: check
+        run: |
+          URL="https://www.sichonengineering.com/"
+          START=$(date +%s%3N)
+          CODE=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "$URL" || echo "000")
+          END=$(date +%s%3N)
+          LAT=$((END - START))
+          echo "code=$CODE" >> "$GITHUB_OUTPUT"
+          echo "latency=$LAT" >> "$GITHUB_OUTPUT"
+          if [ "$CODE" = "200" ]; then
+            echo "status=nominal" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=degraded" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Record the pulse
+        run: |
+          NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          jq --arg hb "$NOW" \
+             --arg st "${{ steps.check.outputs.status }}" \
+             --argjson lat "${{ steps.check.outputs.latency }}" \
+             '.heartbeat = $hb | .status = $st | .latencyMs = $lat' \
+             public/state/ops.json > /tmp/ops.json
+          mv /tmp/ops.json public/state/ops.json
+
+      - name: Commit the pulse
+        run: |
+          git config user.name 'sichon-os'
+          git config user.email 'os@sichonengineering.com'
+          git add public/state/ops.json
+          git diff --cached --quiet || git commit -m "pulse: $(date -u +%Y-%m-%d) · ${{ steps.check.outputs.status }} · ${{ steps.check.outputs.latency }}ms"
+          git push
+
+      - name: File a self-critique (conscience → the Two Keys)
+        if: steps.check.outputs.status != 'nominal'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create self-critique --color D93F0B \
+            --description 'Filed by the entity against itself' --force || true
+          gh issue create \
+            --title "Self-critique: body check failed ($(date -u +%Y-%m-%d), HTTP ${{ steps.check.outputs.code }})" \
+            --label self-critique \
+            --assignee bk376,KropK \
+            --body "The heartbeat found the body degraded. HTTP ${{ steps.check.outputs.code }}, latency ${{ steps.check.outputs.latency }}ms. Per SICHON-OS §2 (CRITIC) and §7, this lands on the desks of both keys. — the HEART"

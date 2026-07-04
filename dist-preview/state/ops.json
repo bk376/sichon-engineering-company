@@ -1,0 +1,16 @@
+{
+  "os": "SICHON-OS",
+  "version": "1.0.0",
+  "attestation": "sha256:3c38f8086aeb037097a190c06e64dbee02be0138b3281cbc1d6e4ca70b3f2f71",
+  "heartbeat": "2026-07-04T00:00:00Z",
+  "status": "nominal",
+  "latencyMs": null,
+  "keys": 2,
+  "instrumentsOnline": 1,
+  "focus": "Tool 02 — drainage & flood snapshot",
+  "changelog": [
+    { "date": "2026-07-04", "entry": "SICHON-OS v1 adopted: authority kernel, heartbeat, self-critique organ, the Two Keys" },
+    { "date": "2026-07-04", "entry": "Tools 01 — Solar estimator shipped (Kenya-calibrated, client-side)" },
+    { "date": "2026-07-03", "entry": "Jenga Taifa scroll narrative, taste positioning, conversion funnel" }
+  ]
+}

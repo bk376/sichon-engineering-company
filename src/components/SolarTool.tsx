@@ -1,7 +1,11 @@
 import { useMemo, useState } from 'react'
 import Reveal from './Reveal'
 import { counties, estimateSolar, ksh, model } from '../data/solar'
+import { OUTPUT_STAMP, STAMP_RULE, registry } from '../os/kernel'
 import styles from './SolarTool.module.css'
+
+/** This instrument's registration in the SICHON-OS kernel. */
+const SELF = registry.find((i) => i.id === 'solar-01')!
 
 type Mode = 'bill' | 'kwh'
 
@@ -110,7 +114,7 @@ export default function SolarTool() {
             {est ? (
               <div className={styles.plate} aria-live="polite">
                 <div className={styles.plateHead}>
-                  <span className={styles.plateStamp}>PRELIM · FOR PLANNING</span>
+                  <span className={styles.plateStamp}>{OUTPUT_STAMP[SELF.outputClass]}</span>
                   <span className={styles.plateLoc}>
                     {est.county.name} · {est.county.pvout} kWh/kWp/day
                   </span>
@@ -148,10 +152,7 @@ export default function SolarTool() {
 
                 <div className={styles.plateActions}>
                   <a href="#brief" className={styles.cta}>Turn this into a stamped design →</a>
-                  <span className={styles.disclaimer}>
-                    Planning estimate. Final design needs a site survey and review
-                    by a licensed engineer.
-                  </span>
+                  <span className={styles.disclaimer}>{STAMP_RULE}</span>
                 </div>
               </div>
             ) : (
