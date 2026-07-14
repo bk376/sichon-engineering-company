@@ -1,14 +1,9 @@
 import Header from './components/Header'
 import BuildJourney from './components/BuildJourney'
-import Gap from './components/Gap'
-import Aspiration from './components/Aspiration'
-import Manifesto from './components/Manifesto'
 import Services from './components/Services'
 import ToolsHub from './components/ToolsHub'
 import Desk from './components/Desk'
-import Values from './components/Values'
-import Process from './components/Process'
-import Pulse from './components/Pulse'
+import Standard from './components/Standard'
 import Brief from './components/Brief'
 import Contact from './components/Contact'
 import MobileCTA from './components/MobileCTA'
@@ -19,15 +14,10 @@ export default function App() {
       <Header />
       <main>
         <BuildJourney />
-        <Gap />
-        <Aspiration />
-        <Manifesto />
         <Services />
         <ToolsHub />
         <Desk />
-        <Values />
-        <Process />
-        <Pulse />
+        <Standard />
         <Brief />
       </main>
       <Contact />

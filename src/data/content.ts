@@ -118,11 +118,10 @@ export const brief = {
 }
 
 export const nav = [
-  { label: 'The Gap', href: '#gap' },
-  { label: 'The Life', href: '#taste' },
   { label: 'Services', href: '#services' },
   { label: 'Tools', href: '#tools' },
   { label: 'Pricing', href: '#desk' },
+  { label: 'Standard', href: '#standard' },
 ] as const
 
 export const hero = {
