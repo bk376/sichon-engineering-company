@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,400;9..144,0,500;9..144,0,600;9..144,1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f4ef; --paper2:#efeee6; --ink:#16150f; --ink2:#4a473e; --ink3:#86837a;
+    --accent:#e8843c; --accentD:#c6641f; --line:rgba(22,21,15,.14); --line2:rgba(22,21,15,.07);
+    --onDark:#f5f4ef; --onDark2:rgba(245,244,239,.62); --onDark3:rgba(245,244,239,.4);
+    --lineD:rgba(245,244,239,.16);
+    --fd:'Fraunces',Georgia,serif; --fb:'Inter',system-ui,sans-serif; --fm:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  @page{size:A4;margin:0}
+  body{font-family:var(--fb);color:var(--ink);background:var(--paper);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .page{width:210mm;height:297mm;padding:20mm 22mm;position:relative;overflow:hidden;page-break-after:always;display:flex;flex-direction:column}
+  .page:last-child{page-break-after:auto}
+  .dark{background:var(--ink);color:var(--onDark)}
+  .dark .mono{color:var(--onDark3)}
+
+  .mono{font-family:var(--fm);font-size:8.5pt;letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
+  .eyebrow{font-family:var(--fm);font-size:8.5pt;letter-spacing:.22em;text-transform:uppercase;color:var(--accentD);display:flex;align-items:center;gap:9px}
+  .eyebrow::before{content:'';width:26px;height:1px;background:var(--accent)}
+  .dark .eyebrow{color:var(--accent)}
+  h1{font-family:var(--fd);font-weight:500;letter-spacing:-.02em;line-height:1.02}
+  h2{font-family:var(--fd);font-weight:500;font-size:27pt;letter-spacing:-.02em;line-height:1.05;margin:14px 0}
+  .lead{font-size:12.5pt;line-height:1.55;color:var(--ink2)}
+  .dark .lead{color:var(--onDark2)}
+  em{font-style:italic;color:var(--accentD)}
+  .dark em{color:var(--accent)}
+  .grid-bg{position:absolute;inset:0;background-image:linear-gradient(var(--lineD) 1px,transparent 1px),linear-gradient(90deg,var(--lineD) 1px,transparent 1px);background-size:64px 64px;opacity:.5;
+    -webkit-mask-image:radial-gradient(120% 90% at 70% 20%,#000 30%,transparent 80%)}
+  .glow{position:absolute;right:-60px;top:-80px;width:520px;height:420px;background:radial-gradient(closest-side,rgba(232,132,60,.18),transparent);pointer-events:none}
+
+  /* mark */
+  .mark{display:flex;flex-direction:column;gap:5px}
+  .mark span{border-radius:2px}
+  .m1{width:52px;height:9px;background:var(--accent)}
+  .m2{width:38px;height:9px;background:var(--onDark)}
+  .m3{width:52px;height:9px;background:var(--accent)}
+  .markInk .m2{background:var(--ink)}
+
+  /* cover */
+  .cover-top{display:flex;justify-content:space-between;align-items:flex-start}
+  .wordmark{font-family:var(--fd);font-weight:600;font-size:13pt}
+  .cover-mid{margin-top:auto}
+  .cover h1{font-size:52pt;color:var(--onDark)}
+  .cover .tagline{font-family:var(--fm);font-size:10pt;letter-spacing:.3em;color:var(--accent);margin-top:22px}
+  .cover .desk{font-family:var(--fd);font-size:15pt;color:var(--onDark2);margin-top:28px;font-style:italic}
+  .rule{height:1px;background:var(--lineD);margin:26px 0}
+  .cover-foot{display:flex;justify-content:space-between;font-family:var(--fm);font-size:8pt;letter-spacing:.14em;color:var(--onDark3)}
+
+  /* numbers */
+  .stat-row{display:flex;gap:22px;align-items:baseline;padding:15px 0;border-bottom:1px solid var(--line)}
+  .stat-row:first-of-type{border-top:1px solid var(--line)}
+  .figure{font-family:var(--fd);font-weight:600;font-size:34pt;line-height:.9;letter-spacing:-.02em;flex:0 0 150px}
+  .figure b{color:var(--accentD);font-weight:600}
+  .stat-body{flex:1}
+  .stat-body .l{font-family:var(--fd);font-size:14pt;font-weight:500;letter-spacing:-.01em}
+  .stat-body .s{font-size:9.5pt;color:var(--ink2);margin-top:3px;line-height:1.4}
+  .stat-src{font-family:var(--fm);font-size:7.5pt;letter-spacing:.1em;color:var(--ink3);flex:0 0 118px;text-align:right}
+
+  /* funnel */
+  .flow{display:flex;gap:0;margin:8px 0 4px;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  .flow div{flex:1;padding:13px 12px;border-right:1px solid var(--line);background:var(--paper2)}
+  .flow div:last-child{border-right:0}
+  .flow .n{font-family:var(--fm);font-size:7.5pt;color:var(--accentD);letter-spacing:.1em}
+  .flow .t{font-family:var(--fd);font-size:11.5pt;font-weight:500;margin-top:5px;line-height:1.1}
+
+  .two{display:flex;gap:26px;margin-top:6px}
+  .two>div{flex:1}
+  .card{border:1px solid var(--line);border-radius:6px;padding:16px 18px;background:var(--paper2)}
+  .card h3{font-family:var(--fd);font-weight:500;font-size:13pt;letter-spacing:-.01em;margin-bottom:6px}
+  .card p{font-size:9.5pt;line-height:1.5;color:var(--ink2)}
+  .badge{display:inline-block;font-family:var(--fm);font-size:7pt;letter-spacing:.14em;color:var(--accentD);border:1px solid rgba(232,132,60,.4);padding:2px 7px;border-radius:3px;margin-bottom:8px}
+
+  /* SKU table */
+  table{width:100%;border-collapse:collapse;margin-top:6px}
+  th{font-family:var(--fm);font-size:7.5pt;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  td{padding:12px 10px;border-bottom:1px solid var(--line2);vertical-align:top;font-size:10pt}
+  td .nm{font-family:var(--fd);font-size:12pt;font-weight:500}
+  td .pr{font-family:var(--fd);font-weight:600;font-size:13pt}
+  .cur{font-size:8pt;color:var(--ink3);font-weight:500}
+  .tt{font-family:var(--fm);font-size:8pt;color:var(--accentD)}
+  .rails{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+  .rails span{font-family:var(--fm);font-size:8pt;color:var(--ink2);border:1px solid var(--line);padding:3px 9px;border-radius:99px;background:var(--paper2)}
+
+  /* horizon ladder */
+  .ladder{margin-top:6px}
+  .rung{display:flex;gap:16px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--lineD)}
+  .rung .h{font-family:var(--fm);font-size:9pt;color:var(--accent);flex:0 0 34px;padding-top:2px}
+  .rung .b h4{font-family:var(--fd);font-weight:500;font-size:13pt;color:var(--onDark)}
+  .rung .b p{font-size:9pt;color:var(--onDark2);margin-top:2px}
+  .vals{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .vals span{font-family:var(--fm);font-size:8pt;letter-spacing:.12em;text-transform:uppercase;color:var(--onDark2);border:1px solid var(--lineD);padding:5px 11px;border-radius:3px}
+
+  .kicker{font-family:var(--fd);font-size:15pt;font-weight:500;line-height:1.35;letter-spacing:-.01em}
+  .shot{width:100%;border:1px solid var(--line);border-radius:6px;display:block;overflow:hidden}
+  .shot img{width:100%;display:block}
+  .cap{font-family:var(--fm);font-size:7.5pt;letter-spacing:.1em;color:var(--ink3);margin-top:7px}
+  .instr{margin-top:16px}
+  .instr .lbl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .instr .lbl .nm{font-family:var(--fd);font-size:14pt;font-weight:500;letter-spacing:-.01em}
+  .instr p{font-size:9.5pt;color:var(--ink2);line-height:1.5;margin-top:8px;max-width:56em}
+  .banner{margin-top:20px}
+  .banner img{width:100%;display:block;border:1px solid var(--line);border-radius:6px}
+  .foot-note{margin-top:auto;font-family:var(--fm);font-size:7.5pt;letter-spacing:.1em;color:var(--ink3);border-top:1px solid var(--line);padding-top:12px}
+  .dark .foot-note{color:var(--onDark3);border-top-color:var(--lineD)}
+  .pg{position:absolute;bottom:14mm;right:22mm;font-family:var(--fm);font-size:7.5pt;color:var(--ink3)}
+  .dark .pg{color:var(--onDark3)}
+</style>
+</head>
+<body>
+
+<!-- ══ PAGE 1 · COVER ══ -->
+<section class="page dark cover">
+  <div class="grid-bg"></div><div class="glow"></div>
+  <div class="cover-top">
+    <div class="mark"><span class="m1"></span><span class="m2"></span><span class="m3"></span></div>
+    <div class="wordmark">Sichon</div>
+  </div>
+  <div class="cover-mid">
+    <div class="eyebrow">Company brief · 2026</div>
+    <h1 style="margin-top:20px">Building the nation,<br><em>responsibly.</em></h1>
+    <div class="tagline">BUILD THE NATION · JENGA TAIFA</div>
+    <div class="desk">The engineering desk of East Africa — engineering you can simply buy.</div>
+    <div class="rule"></div>
+    <div class="cover-foot">
+      <span>SICHON ENGINEERING COMPANY</span>
+      <span>01°17′S · 36°49′E — NAIROBI, KENYA</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PAGE 2 · THE GAP ══ -->
+<section class="page">
+  <div class="eyebrow">Why we exist</div>
+  <h2>Engineering is not merely a technical profession — it is a <em>civic responsibility.</em></h2>
+  <p class="lead" style="max-width:52em">Technology is the defining feature of the 21st century. Nations that harness it thrive; those that neglect it stagnate. Across Kenya, the infrastructure gap is not an abstraction. It is measurable — and so is the answer.</p>
+
+  <div style="margin-top:26px">
+    <div class="stat-row">
+      <div class="figure"><b>8</b>4.9%</div>
+      <div class="stat-body"><div class="l">of Kenya’s roads are unpaved</div><div class="s">140,099 of 164,967 km remain earth or gravel; county roads just 2.5% paved.</div></div>
+      <div class="stat-src">KNBS Economic Survey 2024</div>
+    </div>
+    <div class="stat-row">
+      <div class="figure"><b>1</b> in 4</div>
+      <div class="stat-body"><div class="l">Kenyans live without electricity</div><div class="s">76% had power by 2023, up from 37% a decade earlier. The last mile is the hardest.</div></div>
+      <div class="stat-src">World Bank · OWID</div>
+    </div>
+    <div class="stat-row">
+      <div class="figure"><b>2</b>M+</div>
+      <div class="stat-body"><div class="l">housing units short — and growing</div><div class="s">A national deficit widening by roughly 200,000 homes every year.</div></div>
+      <div class="stat-src">UN-Habitat · Vision 2030</div>
+    </div>
+    <div class="stat-row">
+      <div class="figure"><b>4</b>6.5%</div>
+      <div class="stat-body"><div class="l">of urban Kenyans live in informal settlements</div><div class="s">More than twice the global average — a call for drainage, walls, dignified public space.</div></div>
+      <div class="stat-src">UN-Habitat</div>
+    </div>
+  </div>
+
+  <p class="kicker" style="margin-top:24px;max-width:42em">The distance between what Kenya is and what Kenya could be is measurable. Sichon exists to <em>close it.</em></p>
+  <div class="banner">
+    <img src="img-banner.png" alt="From the unlit gap to a paved, powered, green nation">
+    <div class="cap">FROM THE UNLIT GAP TO A PAVED, POWERED, GREEN NATION — THE SICHON SCROLL NARRATIVE, LIVE ON THE SITE</div>
+  </div>
+  <div class="foot-note">SICHON ENGINEERING COMPANY · THE GAP, IN NUMBERS</div>
+  <div class="pg">02</div>
+</section>
+
+<!-- ══ PAGE 3 · THE MODEL ══ -->
+<section class="page">
+  <div class="glow" style="opacity:.5"></div>
+  <div class="eyebrow">What Sichon is</div>
+  <h2>Not hours for hire. <em>Engineering you can simply buy.</em></h2>
+  <p class="lead" style="max-width:52em">Every consultancy sells the same thing: the billable hours of engineers. Sichon does the opposite. We amortize engineering judgement into <b>calibrated tools</b>, compute your answer before you pay, and sell a fixed-price, <b>licensed-engineer-stamped</b> deliverable — with a printed price and a turnaround clock.</p>
+
+  <div style="margin-top:24px"><div class="mono" style="color:var(--accentD)">The loop</div></div>
+  <div class="flow">
+    <div><div class="n">01</div><div class="t">Free tool</div></div>
+    <div><div class="n">02</div><div class="t">Your estimate</div></div>
+    <div><div class="n">03</div><div class="t">Fixed-price order</div></div>
+    <div><div class="n">04</div><div class="t">Engineer stamp</div></div>
+    <div><div class="n">05</div><div class="t">Delivery + proof</div></div>
+  </div>
+  <p style="font-size:9.5pt;color:var(--ink2);margin-top:10px;max-width:54em">The tools are honest by design — where competitors flatter their numbers, we print our assumptions. Verified honesty is the one advantage a rival cannot copy without abandoning their own sales pitch.</p>
+
+  <div class="card" style="margin-top:26px">
+    <div class="badge">THE DIFFERENCE</div>
+    <p style="font-size:10.5pt;line-height:1.55">A Nairobi consultancy quotes three weeks and hundreds of thousands of shillings for a rooftop-solar feasibility. Our tool computes the same first-pass answer in <b>400 milliseconds</b>, in the client’s browser, free, at 11 p.m. We did not hire faster engineers — we changed the nature of the deliverable.</p>
+  </div>
+  <div class="foot-note">SICHON ENGINEERING COMPANY · THE MODEL: TASTE + TOOLING</div>
+  <div class="pg">03</div>
+</section>
+
+<!-- ══ PAGE 4 · INSTRUMENT 01 ══ -->
+<section class="page">
+  <div class="eyebrow">The instruments — live today</div>
+  <h2>Real physics, in your browser. <em>No email required.</em></h2>
+  <div class="instr">
+    <div class="lbl"><span class="nm">01 · Solar estimator</span><span class="mono" style="color:var(--accentD)">TOOL 01 · LIVE</span></div>
+    <div class="shot"><img src="img-solar.png" alt="Sichon solar estimator"></div>
+    <p>County-level Global Solar Atlas yields, current KPLC tariffs and real Kenyan install costs → system size, generation, payback — with every assumption printed on the result. Where rivals model 100% self-consumption and a net-metering regime Kenya does not have, we print 65% and say why. The honest number wins the client who checks — and that client is the one worth having. A free estimate becomes a paid, stamped design in one tap.</p>
+  </div>
+  <div class="foot-note">SICHON ENGINEERING COMPANY · INSTRUMENT 01 · SOLAR</div>
+  <div class="pg">04</div>
+</section>
+
+<!-- ══ PAGE 5 · INSTRUMENT 02 ══ -->
+<section class="page">
+  <div class="eyebrow">The instruments — live today</div>
+  <h2>Built for Kenya’s <em>flood season.</em></h2>
+  <div class="instr">
+    <div class="lbl"><span class="nm">02 · Drainage &amp; flood snapshot</span><span class="mono" style="color:var(--accentD)">TOOL 02 · LIVE</span></div>
+    <div class="shot"><img src="img-drainage.png" alt="Sichon drainage &amp; flood tool"></div>
+    <p>Rational-method peak runoff against your climatic zone’s design storm, Manning full-flow pipe sizing, and how much water your plot must hold when there is no outlet — the exact questions Kenyan sites fail on every rainy season. Each new instrument is built in a single working session; retaining walls, roads, site feasibility and greening follow the same pattern. The marginal cost of a new engineering tool approaches zero — and the market has not yet repriced this.</p>
+  </div>
+  <div class="foot-note">SICHON ENGINEERING COMPANY · INSTRUMENT 02 · DRAINAGE</div>
+  <div class="pg">05</div>
+</section>
+
+<!-- ══ PAGE 4 · THE DESK ══ -->
+<section class="page">
+  <div class="eyebrow">The Desk — what you can commission</div>
+  <h2>A printed price. A real deadline. <em>A stamp behind it.</em></h2>
+  <p class="lead" style="max-width:50em">No “request a quote” theatre. Fixed-price, tool-accelerated deliverables, reviewed by a licensed engineer before they leave the desk.</p>
+
+  <table>
+    <thead><tr><th>Deliverable</th><th>Price</th><th>Turnaround</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><div class="nm">Stamped solar design</div></td><td><span class="cur">KSh</span> <span class="pr">15,000</span><div class="cur">≈ $116</div></td><td class="tt">72 HOURS</td><td style="font-size:9pt;color:var(--accentD)">Open</td></tr>
+      <tr><td><div class="nm">Site feasibility snapshot</div></td><td><span class="cur">KSh</span> <span class="pr">30,000</span><div class="cur">≈ $233</div></td><td class="tt">5 DAYS</td><td style="font-size:9pt;color:var(--accentD)">Open</td></tr>
+      <tr><td><div class="nm">Drainage &amp; flood assessment</div></td><td><span class="cur">KSh</span> <span class="pr">45,000</span><div class="cur">≈ $349</div></td><td class="tt">7 DAYS</td><td style="font-size:9pt;color:var(--accentD)">Open</td></tr>
+      <tr><td><div class="nm">Retaining wall preliminary design</div></td><td><span class="cur">KSh</span> <span class="pr">60,000</span><div class="cur">≈ $465</div></td><td class="tt">7 DAYS</td><td style="font-size:9pt;color:var(--ink3)">Q3 2026</td></tr>
+    </tbody>
+  </table>
+
+  <div class="two" style="margin-top:26px">
+    <div>
+      <div class="mono" style="color:var(--accentD)">Money traffic — worldwide</div>
+      <div class="rails"><span>M-Pesa</span><span>Visa / Mastercard</span><span>PayPal</span><span>USDC</span><span>Wise</span></div>
+      <p style="font-size:9pt;color:var(--ink2);margin-top:12px;line-height:1.5">Nairobi, London, Dallas, Dubai. A diaspora client can fund a family project from anywhere — with milestone escrow released on engineer-verified progress.</p>
+    </div>
+    <div>
+      <div class="mono" style="color:var(--accentD)">Commission in one tap</div>
+      <p style="font-size:9pt;color:var(--ink2);margin-top:12px;line-height:1.5">Order on WhatsApp with a 50% deposit; balance on delivery. The storefront runs on the network Kenya already uses — no app to install, no friction.</p>
+    </div>
+  </div>
+  <div class="foot-note">SICHON ENGINEERING COMPANY · THE DESK</div>
+  <div class="pg">06</div>
+</section>
+
+<!-- ══ PAGE 6 · WHY IT WINS + HORIZON ══ -->
+<section class="page dark">
+  <div class="grid-bg"></div>
+  <div class="eyebrow">Why it holds — and where it goes</div>
+  <h2 style="color:var(--onDark)">The code is public. <em>The moat is not.</em></h2>
+  <p class="lead" style="max-width:52em">Anyone can copy a website. No one can copy the Kenya-tuned calibration we keep fresh, the trust earned one honest number at a time, the speed of an instrument per session, or the licensed engineers who stand behind every stamp.</p>
+
+  <div class="mono" style="color:var(--accent);margin-top:26px">The horizon — earned stage by stage</div>
+  <div class="ladder">
+    <div class="rung"><div class="h">H1</div><div class="b"><h4>Stamped SKUs</h4><p>Solar, drainage, walls — fixed-price deliverables. <b>Live now.</b></p></div></div>
+    <div class="rung"><div class="h">H2</div><div class="b"><h4>Design-build</h4><p>Own small works end to end; margin moves from the drawing to the project.</p></div></div>
+    <div class="rung"><div class="h">H3</div><div class="b"><h4>Sichon Towers</h4><p>Land, design, build, hold — own developments, not just serve them.</p></div></div>
+    <div class="rung"><div class="h">H∞</div><div class="b"><h4>The engineering desk of Africa</h4><p>Earned, not declared.</p></div></div>
+  </div>
+
+  <div class="vals">
+    <span>Safety</span><span>Competence</span><span>Integrity</span><span>Respect</span><span>Aesthetics</span>
+  </div>
+  <div class="foot-note">SICHON ENGINEERING COMPANY · THE MOAT &amp; THE HORIZON</div>
+  <div class="pg">07</div>
+</section>
+
+<!-- ══ PAGE 6 · CLOSE ══ -->
+<section class="page dark cover">
+  <div class="grid-bg"></div><div class="glow"></div>
+  <div class="cover-top">
+    <div class="mark"><span class="m1"></span><span class="m2"></span><span class="m3"></span></div>
+    <div class="wordmark">Sichon</div>
+  </div>
+  <div class="cover-mid">
+    <div class="eyebrow">Start a project</div>
+    <h1 style="font-size:40pt;margin-top:18px;color:var(--onDark)">Let’s build something<br>that lasts.</h1>
+    <div class="rule"></div>
+    <div style="display:flex;gap:44px;font-family:var(--fm);font-size:10pt;color:var(--onDark)">
+      <div><div style="color:var(--onDark3);font-size:8pt;letter-spacing:.16em;margin-bottom:5px">EMAIL</div>croptoo@gmail.com</div>
+      <div><div style="color:var(--onDark3);font-size:8pt;letter-spacing:.16em;margin-bottom:5px">PHONE</div>+254 718 223 111</div>
+      <div><div style="color:var(--onDark3);font-size:8pt;letter-spacing:.16em;margin-bottom:5px">LOCATION</div>Nairobi, Kenya</div>
+    </div>
+    <div class="cover-foot" style="margin-top:40px">
+      <span>© 2026 SICHON ENGINEERING COMPANY</span>
+      <span style="color:var(--accent)">JENGA TAIFA</span>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
