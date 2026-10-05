@@ -227,6 +227,31 @@
       overflow: hidden;
     }
 
+    /* Rift Valley photo — fades into the page on every side */
+    .hero__photo {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: url('rift-valley.jpg') center 60% / cover no-repeat;
+      opacity: 0.55;
+      pointer-events: none;
+      -webkit-mask-image:
+        linear-gradient(to bottom, transparent 0%, #000 22%, #000 62%, transparent 100%),
+        linear-gradient(to right, #000 0%, #000 70%, transparent 100%);
+      -webkit-mask-composite: source-in;
+      mask-image:
+        linear-gradient(to bottom, transparent 0%, #000 22%, #000 62%, transparent 100%),
+        linear-gradient(to right, #000 0%, #000 70%, transparent 100%);
+      mask-composite: intersect;
+    }
+    /* navy wash so the text stays readable over the photo */
+    .hero__photo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg, rgba(14,26,39,0.85) 0%, rgba(14,26,39,0.45) 55%, rgba(14,26,39,0.2) 100%);
+    }
+
     /* faint moving grid */
     .hero__grid {
       position: absolute;
@@ -263,7 +288,7 @@
     .hero__body {
       position: relative;
       z-index: 2;
-      max-width: 620px;
+      max-width: 920px;
     }
 
     .hero__eyebrow {
@@ -288,16 +313,19 @@
 
     .hero__hl {
       font-family: var(--fh);
-      font-size: clamp(24px, 3.2vw, 36px);
+      font-size: clamp(19px, 3.2vw, 33px);
       font-weight: 500;
       line-height: 1.3;
       letter-spacing: -0.01em;
-      max-width: 22em;
     }
 
     .hero__hl em {
       font-style: normal;
       color: var(--accent);
+    }
+    .hero__line { display: block; }
+    @media (min-width: 640px) {
+      .hero__line { white-space: nowrap; }
     }
 
     .hero__dash {
@@ -309,9 +337,10 @@
     }
 
     .hero__desc {
-      font-size: clamp(15px, 1.5vw, 16.5px);
+      font-size: clamp(15px, 1.5vw, 17px);
       color: var(--t2);
-      max-width: 520px;
+      max-width: 38em;
+      text-wrap: balance;
       line-height: 1.8;
     }
 
@@ -873,6 +902,7 @@
 
 <!-- ─────────── HERO ─────────── -->
 <section class="hero" id="home" aria-label="Introduction">
+  <div class="hero__photo" aria-hidden="true"></div>
   <div class="hero__grid" aria-hidden="true"></div>
   <div class="hero__orb hero__orb--a" aria-hidden="true"></div>
   <div class="hero__orb hero__orb--b" aria-hidden="true"></div>
@@ -882,8 +912,8 @@
     <div class="hero__eyebrow rv d1">Nairobi, Kenya &nbsp;·&nbsp; Est. 2026</div>
 
     <h1 class="hero__hl rv d2">
-      Engineering is not merely a technical profession —
-      <em>it is a civic responsibility.</em>
+      <span class="hero__line">Engineering is not merely a technical profession —</span>
+      <em class="hero__line">it is a civic responsibility.</em>
     </h1>
 
     <span class="hero__dash rv d3" aria-hidden="true"></span>
