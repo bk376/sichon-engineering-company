@@ -10,7 +10,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
@@ -33,8 +33,8 @@
       --border:  rgba(255,255,255,0.055);
       --border-a:rgba(63,224,192,0.18);
 
-      --fh: 'Space Grotesk', sans-serif;
-      --fb: 'Inter', sans-serif;
+      --fh: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --fb: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
       --r-sm: 10px;
       --r-md: 16px;
@@ -220,10 +220,10 @@
     /* ═══ HERO ════════════════════════════════════════════════ */
     .hero {
       position: relative;
-      min-height: 100svh;
+      min-height: 82svh;
       display: flex;
       align-items: center;
-      padding: 100px clamp(24px, 5vw, 80px) 80px;
+      padding: 120px clamp(24px, 5vw, 80px) 96px;
       overflow: hidden;
     }
 
@@ -263,7 +263,7 @@
     .hero__body {
       position: relative;
       z-index: 2;
-      max-width: 860px;
+      max-width: 620px;
     }
 
     .hero__eyebrow {
@@ -272,7 +272,7 @@
       letter-spacing: 0.28em;
       text-transform: uppercase;
       color: var(--t3);
-      margin-bottom: 36px;
+      margin-bottom: 28px;
       display: flex;
       align-items: center;
       gap: 14px;
@@ -288,29 +288,30 @@
 
     .hero__hl {
       font-family: var(--fh);
-      font-size: clamp(44px, 7.8vw, 96px);
-      font-weight: 700;
-      line-height: 1.02;
-      letter-spacing: -0.025em;
+      font-size: clamp(24px, 3.2vw, 36px);
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      max-width: 22em;
     }
 
     .hero__hl em {
       font-style: normal;
-      display: block;
+      color: var(--accent);
     }
 
     .hero__dash {
       display: block;
       width: 48px; height: 2px;
       background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      margin: 36px 0;
+      margin: 28px 0;
       opacity: 0.7;
     }
 
     .hero__desc {
-      font-size: clamp(15px, 1.8vw, 18px);
+      font-size: clamp(15px, 1.5vw, 16.5px);
       color: var(--t2);
-      max-width: 540px;
+      max-width: 520px;
       line-height: 1.8;
     }
 
@@ -881,18 +882,15 @@
     <div class="hero__eyebrow rv d1">Nairobi, Kenya &nbsp;·&nbsp; Est. 2026</div>
 
     <h1 class="hero__hl rv d2">
-      Engineering is not<br>
-      merely a technical<br>
-      profession —
-      <em class="holo">it is a civic<br>responsibility.</em>
+      Engineering is not merely a technical profession —
+      <em>it is a civic responsibility.</em>
     </h1>
 
     <span class="hero__dash rv d3" aria-hidden="true"></span>
 
     <p class="hero__desc rv d4">
-      Sichon Engineering Company was formed to address Kenya's measurable
-      infrastructure gap. We identify real gaps, design viable solutions,
-      execute responsibly, and build trust through performance.
+      We apply global engineering standards to local problems, delivering
+      optimal solutions and building Kenya's technical capacity.
     </p>
 
   </div>
@@ -1227,8 +1225,8 @@
         <a href="mailto:croptoo@gmail.com" class="footer__email">
           croptoo@gmail.com
         </a>
-        <a href="tel:+254718223111" class="footer__email">
-          +254 718 223 111
+        <a href="tel:+254181384437" class="footer__email">
+          +254 181 384 437
         </a>
       </div>
 
