@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Sichon Engineering Company — Addressing Kenya's infrastructure gap through disciplined, responsible engineering." />
   <title>Sichon Engineering Company</title>
+  <meta name="theme-color" content="#16283A" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316283A'/%3E%3Cg stroke='%23F4F7FA' stroke-width='3.5' stroke-linecap='round'%3E%3Cline x1='32' y1='10' x2='14' y2='40'/%3E%3Cline x1='32' y1='10' x2='52' y2='44'/%3E%3Cline x1='32' y1='10' x2='24' y2='52'/%3E%3Cline x1='14' y1='40' x2='24' y2='52'/%3E%3Cline x1='24' y1='52' x2='52' y2='44'/%3E%3C/g%3E%3Cg fill='%233FE0C0'%3E%3Ccircle cx='32' cy='10' r='5'/%3E%3Ccircle cx='14' cy='40' r='5'/%3E%3Ccircle cx='52' cy='44' r='5'/%3E%3Ccircle cx='24' cy='52' r='5'/%3E%3C/g%3E%3C/svg%3E" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
@@ -16,20 +18,20 @@
   <style>
     /* ═══ TOKENS ═══════════════════════════════════════════ */
     :root {
-      --void:   #040408;
-      --surface:#08081a;
+      --void:   #0E1A27;
+      --surface:#16283A;
       --card:   rgba(255,255,255,0.028);
       --card-h: rgba(255,255,255,0.052);
 
-      --accent:   #38BDF8;
-      --accent-2: #818CF8;
+      --accent:   #3FE0C0;
+      --accent-2: #11A88C;
 
-      --t1: #E2E8FF;
-      --t2: rgba(226,232,255,0.58);
-      --t3: rgba(226,232,255,0.30);
+      --t1: #EEF2F6;
+      --t2: rgba(238,242,246,0.62);
+      --t3: rgba(238,242,246,0.34);
 
       --border:  rgba(255,255,255,0.055);
-      --border-a:rgba(56,189,248,0.18);
+      --border-a:rgba(63,224,192,0.18);
 
       --fh: 'Space Grotesk', sans-serif;
       --fb: 'Inter', sans-serif;
@@ -98,7 +100,7 @@
         110deg,
         var(--accent)  0%,
         var(--accent-2) 35%,
-        #C084FC       60%,
+        #BEC8D2       60%,
         var(--accent)  100%
       );
       background-size: 250% 250%;
@@ -131,7 +133,7 @@
     }
 
     .nav.on {
-      background: rgba(4,4,8,0.78);
+      background: rgba(14,26,39,0.82);
       backdrop-filter: var(--blur);
       -webkit-backdrop-filter: var(--blur);
       border-bottom: 1px solid var(--border);
@@ -148,24 +150,31 @@
 
     .nav__brand {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 12px;
       line-height: 1.15;
     }
+    .brand__mark { width: 52px; height: auto; flex: none; }
+    .brand__words { display: flex; flex-direction: column; align-items: center; }
+    .nav__brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 6px; }
 
     .nav__name {
-      font-family: var(--fh);
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
+      font-family: 'Jost', var(--fh);
+      font-size: 19px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      margin-right: -0.2em;
       text-transform: uppercase;
       color: var(--t1);
     }
 
     .nav__sub {
-      font-size: 9.5px;
-      letter-spacing: 0.26em;
+      font-family: 'Jost', var(--fb);
+      font-size: 8.5px;
+      letter-spacing: 0.42em;
+      margin-right: -0.42em;
       text-transform: uppercase;
-      color: var(--t3);
+      color: #BEC8D2;
       font-weight: 400;
     }
 
@@ -241,13 +250,13 @@
     .hero__orb--a {
       width: 560px; height: 560px;
       top: -15%; right: -8%;
-      background: radial-gradient(circle, rgba(129,140,248,0.12), transparent 68%);
+      background: radial-gradient(circle, rgba(17,168,140,0.12), transparent 68%);
       animation: float-a 11s ease-in-out infinite;
     }
     .hero__orb--b {
       width: 420px; height: 420px;
       bottom: -5%; left: -6%;
-      background: radial-gradient(circle, rgba(56,189,248,0.1), transparent 68%);
+      background: radial-gradient(circle, rgba(63,224,192,0.1), transparent 68%);
       animation: float-b 14s ease-in-out infinite;
     }
 
@@ -447,7 +456,7 @@
       margin-top: 28px;
       padding: 16px 20px;
       border-left: 1px solid var(--border-a);
-      background: rgba(56,189,248,0.04);
+      background: rgba(63,224,192,0.04);
       border-radius: 0 var(--r-sm) var(--r-sm) 0;
     }
 
@@ -527,7 +536,7 @@
       inset: 0;
       background: radial-gradient(
         200px circle at var(--mx) var(--my),
-        var(--svc-glow, rgba(56,189,248,0.06)),
+        var(--svc-glow, rgba(63,224,192,0.06)),
         transparent 72%
       );
       opacity: 0;
@@ -543,10 +552,10 @@
 
     .svc:hover::before { opacity: 1; }
 
-    .svc--a { --svc-glow: rgba(56,189,248,0.07); }
+    .svc--a { --svc-glow: rgba(63,224,192,0.07); }
     .svc--b { --svc-glow: rgba(245,158,11,0.07); }
     .svc--c { --svc-glow: rgba(16,185,129,0.07); }
-    .svc--d { --svc-glow: rgba(129,140,248,0.07); }
+    .svc--d { --svc-glow: rgba(143,179,217,0.07); }
 
     .svc__num {
       font-size: 10px;
@@ -558,10 +567,10 @@
       opacity: 0.65;
     }
 
-    .svc--a { --svc-accent: #38BDF8; }
+    .svc--a { --svc-accent: #3FE0C0; }
     .svc--b { --svc-accent: #F59E0B; }
     .svc--c { --svc-accent: #10B981; }
-    .svc--d { --svc-accent: #818CF8; }
+    .svc--d { --svc-accent: #8FB3D9; }
 
     .svc__icon {
       font-size: 28px;
@@ -636,11 +645,11 @@
     .val:hover { border-color: rgba(255,255,255,0.10); transform: translateY(-4px); }
     .val:hover::after { opacity: 1; }
 
-    .val--1 { --v-c: #38BDF8; }
-    .val--2 { --v-c: #818CF8; }
+    .val--1 { --v-c: #3FE0C0; }
+    .val--2 { --v-c: #8FB3D9; }
     .val--3 { --v-c: #F59E0B; }
     .val--4 { --v-c: #10B981; }
-    .val--5 { --v-c: #F472B6; }
+    .val--5 { --v-c: #BEC8D2; }
 
     .val__n {
       font-size: 9.5px;
@@ -727,20 +736,25 @@
     }
 
     .footer__brand {
-      font-family: var(--fh);
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: 'Jost', var(--fh);
+      font-size: 26px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--t1);
     }
 
+    .footer__brand .brand__mark { width: 96px; margin-bottom: 14px; }
     .footer__brand span {
       display: block;
       font-size: 10px;
       font-weight: 400;
-      letter-spacing: 0.22em;
-      color: var(--t3);
+      letter-spacing: 0.44em;
+      margin-right: -0.44em;
+      color: #BEC8D2;
       margin-top: 4px;
     }
 
@@ -831,8 +845,20 @@
 <nav class="nav" id="nav" aria-label="Main navigation">
   <div class="nav__row">
     <a href="#" class="nav__brand" aria-label="Sichon Engineering Company">
-      <span class="nav__name">Sichon</span>
-      <span class="nav__sub">Engineering Company</span>
+      <svg class="brand__mark" viewBox="0 0 250 215" aria-hidden="true" focusable="false">
+        <ellipse cx="124" cy="171" rx="117" ry="33" fill="#435160" stroke="#BEC8D2" stroke-width="3"/>
+        <line x1="46" y1="148" x2="239" y2="165" stroke="#BEC8D2" stroke-width="4" stroke-dasharray="10 7"/>
+        <g stroke="#F4F7FA" stroke-width="7" stroke-linecap="round">
+          <line x1="124" y1="12" x2="46" y2="148"/><line x1="124" y1="12" x2="239" y2="165"/>
+          <line x1="124" y1="12" x2="88" y2="202"/><line x1="46" y1="148" x2="88" y2="202"/>
+          <line x1="88" y1="202" x2="239" y2="165"/>
+        </g>
+        <g fill="#3FE0C0"><circle cx="124" cy="12" r="11"/><circle cx="46" cy="148" r="11"/><circle cx="239" cy="165" r="11"/><circle cx="88" cy="202" r="11"/></g>
+      </svg>
+      <span class="brand__words">
+        <span class="nav__name">Sichon</span>
+        <span class="nav__sub">Engineering</span>
+      </span>
     </a>
     <ul class="nav__links" role="list">
       <li><a href="#mission">Mission</a></li>
@@ -1180,9 +1206,19 @@
 
     <div class="footer__top rv">
       <div>
-        <div class="footer__brand">
+        <div class="footer__brand" role="img" aria-label="Sichon Engineering logo">
+          <svg class="brand__mark" viewBox="0 0 250 215" aria-hidden="true" focusable="false">
+        <ellipse cx="124" cy="171" rx="117" ry="33" fill="#435160" stroke="#BEC8D2" stroke-width="3"/>
+        <line x1="46" y1="148" x2="239" y2="165" stroke="#BEC8D2" stroke-width="4" stroke-dasharray="10 7"/>
+        <g stroke="#F4F7FA" stroke-width="7" stroke-linecap="round">
+          <line x1="124" y1="12" x2="46" y2="148"/><line x1="124" y1="12" x2="239" y2="165"/>
+          <line x1="124" y1="12" x2="88" y2="202"/><line x1="46" y1="148" x2="88" y2="202"/>
+          <line x1="88" y1="202" x2="239" y2="165"/>
+        </g>
+        <g fill="#3FE0C0"><circle cx="124" cy="12" r="11"/><circle cx="46" cy="148" r="11"/><circle cx="239" cy="165" r="11"/><circle cx="88" cy="202" r="11"/></g>
+      </svg>
           Sichon
-          <span>Engineering Company</span>
+          <span>Engineering</span>
         </div>
       </div>
 
@@ -1228,7 +1264,7 @@
 
   const N    = 72;
   const DIST = 130;
-  const COLS = ['#38BDF8','#818CF8','#C084FC','#F472B6','#34D399'];
+  const COLS = ['#3FE0C0','#3FE0C0','#11A88C','#BEC8D2','#F4F7FA'];
 
   function resize () {
     W = canvas.width  = window.innerWidth;
@@ -1278,7 +1314,7 @@
           ctx.beginPath();
           ctx.moveTo(pts[i].x, pts[i].y);
           ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.strokeStyle = `rgba(129,140,248,${(1 - d/DIST) * 0.14})`;
+          ctx.strokeStyle = `rgba(190,200,210,${(1 - d/DIST) * 0.14})`;
           ctx.lineWidth   = 0.6;
           ctx.stroke();
         }
